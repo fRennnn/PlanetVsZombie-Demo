@@ -180,8 +180,14 @@ int main()
 {
 	ExMessage msg;
 	const int FPS = 60;
-
+	
+	/*DWORD frame_start_time = GetTickCount();*/
+	
+	std::cout << "Loading..." << std::endl;
 	load_game_res();
+	/*DWORD frame_end_time = GetTickCount();
+	DWORD frame_delta_time = frame_end_time - frame_start_time;
+	std::cout << "Done...You spend "<< frame_delta_time << "s" << std::endl;*/
 	initgraph(1280, 720, EW_SHOWCONSOLE);
 	BeginBatchDraw();
 
