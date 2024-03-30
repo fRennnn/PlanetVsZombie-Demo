@@ -44,9 +44,9 @@ public:
 		}
 	}
 
-	void on_update()
+	void on_update(int delta)
 	{
-		curren_scene->on_update();
+		curren_scene->on_update(delta);
 	}
 
 	void on_draw()

@@ -14,7 +14,7 @@ public:
 	{
 		std::cout << "====Game Scene====" << std::endl;
 	}
-	void on_update()
+	void on_update(int delta)
 	{
 		std::cout << "Game is running" << std::endl;
 	}
