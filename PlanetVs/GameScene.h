@@ -3,6 +3,7 @@
 #include<iostream>
 #include"SceneManager.h"
 
+
 extern SceneManager scene_manager;
 class GameScene : public Scene
 {

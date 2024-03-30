@@ -202,11 +202,13 @@ int main()
 		{
 			scene_manager.on_input(msg);
 		}
+
 		static DWORD last_tick_time = GetTickCount();
 		DWORD current_tick_time = GetTickCount();
 		DWORD delta_tick = current_tick_time - last_tick_time;
 		scene_manager.on_update(delta_tick);
 		last_tick_time = current_tick_time;
+
 		cleardevice();
 		scene_manager.on_draw();
 		FlushBatchDraw();

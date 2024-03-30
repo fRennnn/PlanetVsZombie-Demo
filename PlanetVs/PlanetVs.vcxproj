@@ -134,12 +134,14 @@
   <ItemGroup>
     <ClInclude Include="animation.h" />
     <ClInclude Include="atlas.h" />
+    <ClInclude Include="camera.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="MenuScene.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="select_scene.h" />
     <ClInclude Include="util.h" />
+    <ClInclude Include="vector2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
