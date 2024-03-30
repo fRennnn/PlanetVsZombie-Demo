@@ -198,6 +198,7 @@ int main()
 	while (true)
 	{
 		DWORD frame_start_time = GetTickCount();
+		/*事件处理*/
 		while (peekmessage(&msg))
 		{
 			scene_manager.on_input(msg);
@@ -210,6 +211,7 @@ int main()
 		last_tick_time = current_tick_time;
 
 		cleardevice();
+		/*绘制当前场景*/
 		scene_manager.on_draw();
 		FlushBatchDraw();
 		DWORD frame_end_time = GetTickCount();

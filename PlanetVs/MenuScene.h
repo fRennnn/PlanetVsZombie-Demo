@@ -5,6 +5,7 @@
 #include"animation.h"
 #include"atlas.h"
 #include"camera.h"
+#include"timer.h"
 extern Atlas altas_peashooter_run_right;
 
 extern SceneManager scene_manager;
@@ -21,11 +22,18 @@ public:
 		animation_peashooter_run_right.set_atlas(&altas_peashooter_run_right);
 		animation_peashooter_run_right.set_interval(75);
 		animation_peashooter_run_right.set_loop(true);
-		
-	}
+
+		timer.set_wait_time(1000);
+		timer.set_one_shot(false);
+		timer.set_callback([]()
+			{
+				std::cout << "Shot!" << std::endl;
+			});
+	} 
 	void on_update(int delta) 
 	{
 		/*std::cout << "Main Menu is running" << std::endl;*/
+		timer.on_update(delta);
 		camera.on_update(delta);
 		animation_peashooter_run_right.on_update(delta);
 	}
@@ -41,7 +49,8 @@ public:
 	{
 		if (msg.message == WM_KEYDOWN)
 		{
-			scene_manager.switch_to(SceneManager::SceneType::Game);
+			camera.shake(10, 350);
+			std::cout << "Shake!!!" << std::endl;
 		}
 	}
 	void on_exit() 
@@ -51,4 +60,5 @@ public:
 private:
 	Animation animation_peashooter_run_right;
 	Camera camera;
+	Timer timer;
 };

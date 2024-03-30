@@ -140,6 +140,7 @@
     <ClInclude Include="scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="select_scene.h" />
+    <ClInclude Include="timer.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="vector2.h" />
   </ItemGroup>
