@@ -3,8 +3,12 @@
 #pragma comment(lib,"MSIMG32.LIB")
 inline void flip_image(IMAGE* src, IMAGE* dst)
 {
-	int w = src->getheight();
+	/*int w = src->getheight();
 	int h = src->getwidth();
+	给你弱智完了真的
+	*/
+	int w = src->getwidth();
+	int h = src->getheight();
 	Resize(dst, w, h);
 	DWORD* src_buffer = GetImageBuffer(src);
 	DWORD* dst_buffer = GetImageBuffer(dst);

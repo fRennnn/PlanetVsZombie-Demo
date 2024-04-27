@@ -7,7 +7,7 @@
 #include"camera.h"
 #include"timer.h"
 extern Atlas altas_peashooter_run_right;
-
+extern IMAGE img_menu_bg;
 extern SceneManager scene_manager;
 
 class MenuScene : public Scene
@@ -18,44 +18,27 @@ public:
 
 	void on_enter()
 	{
-		/*std::cout << "====Menu Scene====" << std::endl;*/
-		animation_peashooter_run_right.set_atlas(&altas_peashooter_run_right);
-		animation_peashooter_run_right.set_interval(75);
-		animation_peashooter_run_right.set_loop(true);
-
-		timer.set_wait_time(1000);
-		timer.set_one_shot(false);
-		timer.set_callback([]()
-			{
-				std::cout << "Shot!" << std::endl;
-			});
+		mciSendString(_T("play bgm_menu repeat from 0"), NULL, 0, NULL);
+		std::cout << "Menu???..." << std::endl;
 	} 
 	void on_update(int delta) 
 	{
-		/*std::cout << "Main Menu is running" << std::endl;*/
-		timer.on_update(delta);
-		camera.on_update(delta);
-		animation_peashooter_run_right.on_update(delta);
+		
 	}
-	void on_draw() 
+	void on_draw(const Camera& camera)
 	{
-		/*outtextxy(10, 10, _T("Ö÷²Ëµ¥»æÍ¼ÄÚÈÝ"));*/
-		const Vector2& pos_camera = camera.get_position();
-		animation_peashooter_run_right.on_draw(
-			(int)(100 - pos_camera.x), (int)(100 - pos_camera.y)
-		);
+		putimage(0, 0, &img_menu_bg); 
 	}
 	void on_input(const ExMessage& msg)
 	{
-		if (msg.message == WM_KEYDOWN)
-		{
-			camera.shake(10, 350);
-			std::cout << "Shake!!!" << std::endl;
+		if (msg.message == WM_KEYDOWN) {
+			mciSendString(_T("play ui_confirm from 0"), NULL, 0, NULL);
+			scene_manager.switch_to(SceneManager::SceneType::Selector);
 		}
 	}
 	void on_exit() 
 	{ 
-		std::cout << "Main Menu exit" << std::endl;
+		
 	}
 private:
 	Animation animation_peashooter_run_right;

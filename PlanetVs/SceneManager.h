@@ -40,8 +40,9 @@ public:
 			break;
 		default:
 			break;
-			curren_scene->on_enter();
+			
 		}
+		curren_scene->on_enter();
 	}
 
 	void on_update(int delta)
@@ -49,9 +50,9 @@ public:
 		curren_scene->on_update(delta);
 	}
 
-	void on_draw()
+	void on_draw(const Camera& camera)
 	{
-		curren_scene->on_draw();
+		curren_scene->on_draw(camera);
 	}
 
 	void on_input(const ExMessage& msg)

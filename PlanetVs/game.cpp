@@ -3,6 +3,7 @@
 #include"MenuScene.h"
 #include"GameScene.h"
 #include"SceneManager.h"
+#include"select_scene.h"
 #include"atlas.h"
 #include"util.h"
 #pragma comment(lib,"Winmm.lib")
@@ -79,6 +80,8 @@ IMAGE img_avatar_sunflower;
 Scene* menu_scene = nullptr;
 Scene* game_scene = nullptr;
 Scene* selector_scene = nullptr;
+
+Camera main_camera;
 void flip_altas(Atlas& src, Atlas& dst)
 {
 	dst.clear();
@@ -94,35 +97,36 @@ void load_game_res()
 {
 	AddFontResourceEx(_T("resources/IPix.ttf"), FR_PRIVATE, NULL); //像素字体 
 
-	loadimage(&img_menu_bg, _T("resources/VS.png"));
+	loadimage(&img_menu_bg, _T("resources/menu_background.png"));
 	loadimage(&img_1P, _T("resources/1P.png"));
 	loadimage(&img_2P, _T("resources/2P.png"));
 	loadimage(&img_1P_desc, _T("resources/1P_desc.png"));
 	loadimage(&img_2P_desc, _T("resources/2P_desc.png"));
 	loadimage(&img_gravestone_right, _T("resources/gravestone.png"));
 	flip_image(&img_gravestone_right, &img_gravestone_left);
-	loadimage(&img_selector_tip , _T("resources/VS.png"));
-	loadimage(&img_selector_bg, _T("resources/VS.png"));
-	loadimage(&img_1P_selector_btn_idle_right, _T("resources/VS.png"));
+	loadimage(&img_selector_tip , _T("resources/selector_tip.png"));
+	loadimage(&img_selector_bg, _T("resources/selector_background.png"));
+	loadimage(&img_1P_selector_btn_idle_right, _T("resources/1P_selector_btn_idle.png"));
 	flip_image(&img_1P_selector_btn_idle_right, &img_1P_selector_btn_idle_left);
-	loadimage(&img_1P_selector_btn_down_right, _T("resources/VS.png"));
+	loadimage(&img_1P_selector_btn_down_right, _T("resources/1P_selector_btn_down.png"));
 	flip_image(&img_1P_selector_btn_down_right, &img_1P_selector_btn_down_left); 
-	loadimage(&img_2P_selector_btn_idle_right, _T("resources/VS.png"));
+	loadimage(&img_2P_selector_btn_idle_right, _T("resources/2P_selector_btn_idle.png"));
 	flip_image(&img_2P_selector_btn_idle_right, &img_2P_selector_btn_idle_left);
-	loadimage(&img_2P_selector_btn_down_right, _T("resources/VS.png"));
+	loadimage(&img_2P_selector_btn_down_right, _T("resources/2P_selector_btn_down.png"));
 	flip_image(&img_2P_selector_btn_down_right, &img_2P_selector_btn_down_left); 
-	loadimage(&img_peashooter_selector_bg_right, _T("resources/VS.png"));
+	loadimage(&img_peashooter_selector_bg_right, _T("resources/peashooter_selector_background.png"));
 	flip_image(&img_peashooter_selector_bg_right, &img_peashooter_selector_bg_left);
-	loadimage(&img_sunflower_selector_bg_right, _T("resources/VS.png"));
+	loadimage(&img_sunflower_selector_bg_right, _T("resources/sunflower_selector_background.png"));
 	flip_image(&img_sunflower_selector_bg_right, &img_sunflower_selector_bg_right);
 
-	loadimage(&img_sky, _T("resources/VS.png"));
+	loadimage(&img_vs, _T("resources/VS.png"));
+	loadimage(&img_sky, _T("resources/sky.png"));
 	loadimage(&img_hills, _T("resources/VS.png"));
-	loadimage(&img_platform_large, _T("resources/VS.png"));
-	loadimage(&img_platform_small, _T("resources/VS.png"));
+	loadimage(&img_platform_large, _T("resources/platform_large.png"));
+	loadimage(&img_platform_small, _T("resources/platform_small.png"));
 
-	loadimage(&img_1P_cursor, _T("resources/VS.png"));
-	loadimage(&img_2P_cursor, _T("resources/VS.png")); 
+	loadimage(&img_1P_cursor, _T("resources/1P_cursor.png"));
+	loadimage(&img_2P_cursor, _T("resources/2P_cursor.png")); 
 
 	altas_peashooter_idle_right.load_from_file(_T("resources/peashooter_idle_%d.png"), 9);
 	flip_altas(altas_peashooter_attack_ex_right, altas_peashooter_attack_ex_left);
@@ -162,7 +166,7 @@ void load_game_res()
 	loadimage(&img_avatar_sunflower, _T("resources/avatar_sunflower.png"));
 
 	mciSendString(_T("open resources/bgm_game.mp3 alias bgm_game"), NULL, 0, NULL);
-	mciSendString(_T("open resources/bgm_menui.mp3 alias bgm_menu"), NULL, 0, NULL);
+	mciSendString(_T("open resources/bgm_menu.mp3 alias bgm_menu"), NULL, 0, NULL);
 	mciSendString(_T("open resources/pea_break_1.mp3 alias pea_break_1"), NULL, 0, NULL);
 	mciSendString(_T("open resources/pea_break_2.mp3 alias pea_break_2"), NULL, 0, NULL);
 	mciSendString(_T("open resources/pea_break_3.mp3 alias pea_break_3"), NULL, 0, NULL);
@@ -193,8 +197,8 @@ int main()
 
 	menu_scene = new MenuScene();
 	game_scene = new GameScene();
-
-	scene_manager.set_curren_scene(menu_scene);
+	selector_scene = new SelectorScene();
+	scene_manager.set_curren_scene(selector_scene);
 	while (true)
 	{
 		DWORD frame_start_time = GetTickCount();
@@ -212,7 +216,7 @@ int main()
 
 		cleardevice();
 		/*绘制当前场景*/
-		scene_manager.on_draw();
+		scene_manager.on_draw(main_camera);
 		FlushBatchDraw();
 		DWORD frame_end_time = GetTickCount();
 		DWORD frame_delta_time = frame_end_time - frame_start_time;
