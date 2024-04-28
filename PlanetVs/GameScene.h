@@ -4,6 +4,7 @@
 #include"SceneManager.h"
 #include"util.h"
 #include"platform.h"
+#include"player.h"
 extern SceneManager scene_manager;
 extern IMAGE img_sky;
 extern IMAGE img_hills;
@@ -13,6 +14,8 @@ extern IMAGE img_platform_small;
 extern Camera main_camera;
 
 extern std::vector<Platform> platform_list;
+extern Player* player_1;
+extern Player* player_2;
 class GameScene : public Scene
 {
 public:
@@ -22,6 +25,8 @@ public:
 	void on_enter()
 	{
 		std::cout << "Game..." << std::endl;
+		player_1->set_position(200, 50);
+		player_2->set_position(975, 50);
 		pos_img_sky.x = (getwidth() - img_sky.getwidth()) / 2;
 		pos_img_sky.y = (getheight() - img_sky.getheight()) / 2;
 
@@ -65,7 +70,8 @@ public:
 	}
 	void on_update(int delta)
 	{
-		
+		player_1->on_update(delta);
+		player_2->on_update(delta);
 	}
 	void on_draw(const Camera& camera)
 	{
@@ -82,9 +88,15 @@ public:
 			outtextxy(15, 15,_T("已开启调试模式^^,按'Q' 关闭"));
 		}
 
+		player_1->on_draw(camera);
+		player_2->on_draw(camera);
+
 	}
 	void on_input(const ExMessage& msg)
 	{
+		player_1->on_input(msg);
+		player_2->on_input(msg);
+
 		switch(msg.message){
 				case WM_KEYUP:
 					if (msg.vkcode == 0x51)

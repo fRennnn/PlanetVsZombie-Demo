@@ -3,7 +3,10 @@
 #include"SceneManager.h"
 #include"camera.h"
 #include"animation.h"
-extern IMAGE img_vs;
+#include"peashooter_player.h"
+#include"sunflower_player.h"
+#include"player_id.h"
+extern IMAGE img_vs;//一系列资源加载
 extern IMAGE img_1P;
 extern IMAGE img_2P;
 extern IMAGE img_1P_desc;
@@ -36,6 +39,9 @@ extern IMAGE img_avatar_peashooter;
 extern IMAGE img_avatar_sunflower;
  
 extern SceneManager scene_manager;
+
+extern Player* player_1;
+extern Player* player_2;
 class SelectorScene : public Scene 
  {
 public:
@@ -246,7 +252,24 @@ public:
 	}
 
 	void on_exit() {
-
+		switch (player_type_1) {
+		case PlayerType::Peashooter:
+			player_1 = new PeashooterPlayer();
+			break;
+		case PlayerType::Sunflower:
+			player_1 = new SunflowerPlayer();
+			break;
+		}
+		player_1->set_id(PlayerID::P1);
+		switch (player_type_2) {
+		case PlayerType::Peashooter:
+			player_2 = new PeashooterPlayer();
+			break;
+		case PlayerType::Sunflower:
+			player_2 = new SunflowerPlayer();
+			break;
+		}
+		player_2->set_id(PlayerID::P2);
 	}
 
  private:

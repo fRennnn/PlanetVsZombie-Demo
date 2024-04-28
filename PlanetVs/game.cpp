@@ -7,6 +7,7 @@
 #include"atlas.h"
 #include"util.h"
 #include"platform.h"
+#include"player.h"
 #pragma comment(lib,"Winmm.lib")
 SceneManager scene_manager;
 IMAGE img_menu_bg;
@@ -85,6 +86,8 @@ Scene* selector_scene = nullptr;
 Camera main_camera;
 std::vector<Platform> platform_list;
 
+Player* player_1 = nullptr;
+Player* player_2 = nullptr;
 bool is_debug = false;
 
 void flip_altas(Atlas& src, Atlas& dst)
@@ -134,7 +137,7 @@ void load_game_res()
 	loadimage(&img_2P_cursor, _T("resources/2P_cursor.png")); 
 
 	altas_peashooter_idle_right.load_from_file(_T("resources/peashooter_idle_%d.png"), 9);
-	flip_altas(altas_peashooter_attack_ex_right, altas_peashooter_attack_ex_left);
+	flip_altas(altas_peashooter_idle_right, altas_peashooter_idle_left);
 	altas_peashooter_run_right.load_from_file(_T("resources/peashooter_run_%d.png"), 5);
 	flip_altas(altas_peashooter_run_right, altas_peashooter_run_left);
 	altas_peashooter_attack_ex_right.load_from_file(_T("resources/peashooter_attack_ex_%d.png"), 3);
@@ -143,7 +146,7 @@ void load_game_res()
 	flip_altas(altas_peashooter_die_right, altas_peashooter_die_left);
 
 	altas_sunflower_idle_right.load_from_file(_T("resources/sunflower_idle_%d.png"), 8);
-	flip_altas(altas_sunflower_attack_ex_right, altas_sunflower_attack_ex_left);
+	flip_altas(altas_sunflower_idle_right, altas_sunflower_idle_left);
 	altas_sunflower_run_right.load_from_file(_T("resources/sunflower_run_%d.png"), 5);
 	flip_altas(altas_sunflower_run_right, altas_sunflower_run_left);
 	altas_sunflower_attack_ex_right.load_from_file(_T("resources/sunflower_attack_ex_%d.png"), 9);
