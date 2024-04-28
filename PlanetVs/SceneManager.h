@@ -39,8 +39,7 @@ public:
 			curren_scene = selector_scene;
 			break;
 		default:
-			break;
-			
+			break;			
 		}
 		curren_scene->on_enter();
 	}

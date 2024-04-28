@@ -137,6 +137,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="MenuScene.h" />
+    <ClInclude Include="platform.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="select_scene.h" />

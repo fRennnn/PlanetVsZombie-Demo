@@ -30,6 +30,8 @@ extern IMAGE img_sunflower_selector_bg_right;
 
 extern Atlas altas_peashooter_idle_right;
 extern Atlas altas_sunflower_idle_right;
+extern Atlas altas_peashooter_idle_left;
+extern Atlas altas_sunflower_idle_left;
 extern IMAGE img_avatar_peashooter;
 extern IMAGE img_avatar_sunflower;
  
@@ -68,8 +70,8 @@ public:
 		pos_img_2P_gravestone.y = pos_img_1P_gravestone.y;
 		pos_animation_1P.x = (getwidth() / 2 - altas_peashooter_idle_right.get_image(0)->getwidth()) / 2 - OFFSET_X;
 		pos_animation_1P.y = pos_img_1P_gravestone.y + 80;
-		pos_animation_1P.x = getwidth() /2 + (getwidth() / 2 - altas_peashooter_idle_right.get_image(0)->getwidth()) / 2 + OFFSET_X;
-		pos_animation_1P.y = pos_animation_1P.y;
+		pos_animation_2P.x = getwidth() /2 + (getwidth() / 2 - altas_peashooter_idle_right.get_image(0)->getwidth()) / 2 + OFFSET_X;
+		pos_animation_2P.y = pos_animation_1P.y;
 		pos_img_1P_name.y = pos_animation_1P.y + 155;
 		pos_img_2P_name.y = pos_img_1P_name.y;
 		pos_1P_selector_btn_left.x = pos_img_1P_gravestone.x - img_1P_selector_btn_idle_left.getwidth();
@@ -83,12 +85,55 @@ public:
 	}
 
 	void on_update(int delta) {
+		animation_peashooter.on_update(delta);
+		animation_sunflower.on_update(delta);
 
+		selector_bg_scorll_offset_x += 5;
+		if (selector_bg_scorll_offset_x >= img_peashooter_selector_bg_left.getwidth())
+			selector_bg_scorll_offset_x = 0;
 	}
 
 	void on_draw(const Camera& camera) {
+		//背景剪影
+		IMAGE* img_p1_selector_bg = nullptr;
+		IMAGE* img_p2_selector_bg = nullptr;
+
+		switch (player_type_2) {
+		case PlayerType::Peashooter:
+			img_p1_selector_bg = &img_peashooter_selector_bg_right;
+			break;
+		case PlayerType::Sunflower:
+			img_p1_selector_bg = &img_sunflower_selector_bg_right;
+			break;
+		default:
+			img_p1_selector_bg = &img_peashooter_selector_bg_right;
+			break;
+		}
+
+		switch (player_type_1) {
+		case PlayerType::Peashooter:
+			img_p2_selector_bg = &img_peashooter_selector_bg_left;
+			break;
+		case PlayerType::Sunflower:
+			img_p2_selector_bg = &img_sunflower_selector_bg_left;
+			break;
+		default:
+			img_p2_selector_bg = &img_peashooter_selector_bg_left;
+			break;
+		}
 		putimage(0, 0, &img_selector_bg);
 
+		
+		//---------------==========
+		putimage_alpha(selector_bg_scorll_offset_x - img_p1_selector_bg->getwidth(), 0, img_p1_selector_bg);
+		putimage_alpha(selector_bg_scorll_offset_x, 0,
+			img_p1_selector_bg->getwidth() - selector_bg_scorll_offset_x, 0, img_p1_selector_bg, 0, 0);
+
+		putimage_alpha(getwidth() - img_p2_selector_bg->getwidth(), 0, img_p2_selector_bg->getwidth() -
+			selector_bg_scorll_offset_x, 0, img_p2_selector_bg,selector_bg_scorll_offset_x,0);
+
+		putimage_alpha(getwidth() - selector_bg_scorll_offset_x, 0 , img_p2_selector_bg);
+		//---------------==========
 		putimage_alpha(pos_img_vs.x, pos_img_vs.y, &img_vs);
 
 		putimage_alpha(pos_img_1P.x, pos_img_1P.y, &img_1P);
@@ -96,21 +141,120 @@ public:
 		putimage_alpha(pos_img_1P_gravestone.x, pos_img_1P_gravestone.y, &img_gravestone_right);
 		putimage_alpha(pos_img_2P_gravestone.x, pos_img_2P_gravestone.y, &img_gravestone_left);
 
+		switch (player_type_1) { 
+		case PlayerType::Peashooter:
+			animation_peashooter.on_draw(camera, pos_animation_1P.x, pos_animation_1P.y);
+			pos_img_1P_name.x = pos_img_1P_gravestone.x + (img_gravestone_right.getwidth() - textwidth(str_peashooter_name)) / 2;
+			outtextxy_shaded(pos_img_1P_name.x, pos_img_1P_name.y, str_peashooter_name);
+			break;
+		case PlayerType::Sunflower:
+			animation_sunflower.on_draw(camera, pos_animation_1P.x, pos_animation_1P.y);
+			pos_img_1P_name.x = pos_img_1P_gravestone.x + (img_gravestone_right.getwidth() - textwidth(str_sunflower_name)) / 2;
+			outtextxy_shaded(pos_img_1P_name.x, pos_img_1P_name.y, str_sunflower_name);
+			break;
+		} 
+
+		switch (player_type_2) {
+		case PlayerType::Peashooter:
+			animation_peashooter.on_draw(camera, pos_animation_2P.x, pos_animation_2P.y);
+			pos_img_2P_name.x = pos_img_2P_gravestone.x + (img_gravestone_left.getwidth() - textwidth(str_peashooter_name)) / 2;
+			outtextxy_shaded(pos_img_2P_name.x, pos_img_2P_name.y, str_peashooter_name);
+			break;
+		case PlayerType::Sunflower:
+			animation_sunflower.on_draw(camera, pos_animation_2P.x, pos_animation_2P.y);
+			pos_img_2P_name.x = pos_img_2P_gravestone.x + (img_gravestone_left.getwidth() - textwidth(str_sunflower_name)) / 2;
+			outtextxy_shaded(pos_img_2P_name.x, pos_img_2P_name.y, str_sunflower_name);
+			break;
+		}
+
+
+		//按钮
+		putimage_alpha(pos_1P_selector_btn_left.x, pos_1P_selector_btn_left.y
+			, is_btn_1P_left_down ? &img_1P_selector_btn_down_left : &img_1P_selector_btn_idle_left);
+		putimage_alpha(pos_1P_selector_btn_right.x, pos_1P_selector_btn_right.y
+			, is_btn_1P_right_down ? &img_1P_selector_btn_down_right : &img_1P_selector_btn_idle_right);
+		putimage_alpha(pos_2P_selector_btn_left.x, pos_2P_selector_btn_left.y
+			, is_btn_2P_left_down ? &img_2P_selector_btn_down_left : &img_2P_selector_btn_idle_left);
+		putimage_alpha(pos_2P_selector_btn_right.x, pos_2P_selector_btn_right.y
+			, is_btn_2P_right_down ? &img_2P_selector_btn_down_right : &img_2P_selector_btn_idle_right);
+
+		//----------
 		putimage_alpha(pos_img_1P_desc.x, pos_img_1P_desc.y, &img_1P_desc);
 		putimage_alpha(pos_img_2P_desc.x, pos_img_2P_desc.y, &img_2P_desc);
 
 		putimage_alpha(pos_img_tip.x, pos_img_tip.y, &img_selector_tip);
+
+		
+
 	}
 
 	void on_input(const ExMessage& msg) {
-		if (msg.message == WM_KEYDOWN) {
-			scene_manager.switch_to(SceneManager::SceneType::Menu);
+		switch (msg.message) {
+		case WM_KEYDOWN:
+					switch (msg.vkcode)
+					{
+					case 0x41://A
+						is_btn_1P_left_down = true;
+						break;
+					case 0x44://D
+						is_btn_1P_right_down = true;
+						break;
+					case VK_LEFT:// <-
+						is_btn_2P_left_down = true;
+						break;
+					case VK_RIGHT:// ->
+						is_btn_2P_right_down = true;
+						break;
+					default:
+						break;
+					}
+			break;
+		case WM_KEYUP:
+					switch (msg.vkcode)
+					{
+					case 0x41://A
+						is_btn_1P_left_down = false;
+						player_type_1 = (PlayerType)(((int)PlayerType::Invalid + (int)player_type_1 - 1) % (int)PlayerType::Invalid);
+						mciSendString(_T("play ui_switch from 0"), NULL, 0, NULL);
+						break;
+					case 0x44://D
+						is_btn_1P_right_down = false;
+						player_type_1 = (PlayerType)(((int)player_type_1 + 1) % (int)PlayerType::Invalid);
+						mciSendString(_T("play ui_switch from 0"), NULL, 0, NULL);
+						break;
+					case VK_LEFT:// <-
+						is_btn_2P_left_down = false;
+						player_type_2 = (PlayerType)(((int)PlayerType::Invalid + (int)player_type_2 - 1) % (int)PlayerType::Invalid);
+						mciSendString(_T("play ui_switch from 0"), NULL, 0, NULL);
+						break;
+					case VK_RIGHT:// ->
+						is_btn_2P_right_down = false;
+						player_type_2 = (PlayerType)(((int)player_type_2 + 1) % (int)PlayerType::Invalid);
+						mciSendString(_T("play ui_switch from 0"), NULL, 0, NULL);
+						break;
+					case VK_RETURN:
+						scene_manager.switch_to(SceneManager::SceneType::Game);
+						mciSendString(_T("play ui_switch from 0"), NULL, 0, NULL);
+						break;
+					default:
+						break;
+					}
+			break;
+		default:
+			break;
 		}
 	}
 
 	void on_exit() {
 
 	}
+
+ private:
+	 enum class PlayerType {
+		 Peashooter = 0,
+		 Sunflower,
+		 Invalid
+	 };
 private:
 	POINT pos_img_vs = { 0 };
 	POINT pos_img_tip = { 0 };
@@ -131,4 +275,25 @@ private:
 
 	Animation animation_peashooter;
 	Animation animation_sunflower;
+
+	PlayerType player_type_1 = PlayerType::Peashooter;
+	PlayerType player_type_2 = PlayerType::Sunflower;
+
+	LPCTSTR str_peashooter_name = _T("豌豆射手");
+	LPCTSTR str_sunflower_name = _T("向日葵");
+
+	int selector_bg_scorll_offset_x = 0;
+
+	//按钮
+	bool is_btn_1P_left_down = false;
+	bool is_btn_1P_right_down = false;
+	bool is_btn_2P_left_down = false;
+	bool is_btn_2P_right_down = false;
+private:
+	void outtextxy_shaded(int x, int y, LPCTSTR str) {
+		settextcolor(RGB(45, 45, 45));
+		outtextxy(x + 3, y + 3, str);
+		settextcolor(RGB(255, 255, 255));
+		outtextxy(x, y, str);
+	}
 };

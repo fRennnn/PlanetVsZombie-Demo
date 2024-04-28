@@ -6,6 +6,7 @@
 #include"select_scene.h"
 #include"atlas.h"
 #include"util.h"
+#include"platform.h"
 #pragma comment(lib,"Winmm.lib")
 SceneManager scene_manager;
 IMAGE img_menu_bg;
@@ -82,6 +83,10 @@ Scene* game_scene = nullptr;
 Scene* selector_scene = nullptr;
 
 Camera main_camera;
+std::vector<Platform> platform_list;
+
+bool is_debug = false;
+
 void flip_altas(Atlas& src, Atlas& dst)
 {
 	dst.clear();
@@ -117,11 +122,11 @@ void load_game_res()
 	loadimage(&img_peashooter_selector_bg_right, _T("resources/peashooter_selector_background.png"));
 	flip_image(&img_peashooter_selector_bg_right, &img_peashooter_selector_bg_left);
 	loadimage(&img_sunflower_selector_bg_right, _T("resources/sunflower_selector_background.png"));
-	flip_image(&img_sunflower_selector_bg_right, &img_sunflower_selector_bg_right);
+	flip_image(&img_sunflower_selector_bg_right, &img_sunflower_selector_bg_left);
 
 	loadimage(&img_vs, _T("resources/VS.png"));
 	loadimage(&img_sky, _T("resources/sky.png"));
-	loadimage(&img_hills, _T("resources/VS.png"));
+	loadimage(&img_hills, _T("resources/hills.png"));
 	loadimage(&img_platform_large, _T("resources/platform_large.png"));
 	loadimage(&img_platform_small, _T("resources/platform_small.png"));
 
@@ -193,12 +198,15 @@ int main()
 	DWORD frame_delta_time = frame_end_time - frame_start_time;
 	std::cout << "Done...You spend "<< frame_delta_time << "s" << std::endl;*/
 	initgraph(1280, 720, EW_SHOWCONSOLE);
+
+	settextstyle(28, 0, _T("IPix"));
+	setbkmode(TRANSPARENT);
 	BeginBatchDraw();
 
 	menu_scene = new MenuScene();
 	game_scene = new GameScene();
 	selector_scene = new SelectorScene();
-	scene_manager.set_curren_scene(selector_scene);
+	scene_manager.set_curren_scene(menu_scene);
 	while (true)
 	{
 		DWORD frame_start_time = GetTickCount();
