@@ -19,10 +19,16 @@
     <Filter Include="头文件\player">
       <UniqueIdentifier>{d54e4285-f224-4d4d-844c-05851355754e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Bullet">
+      <UniqueIdentifier>{97a94e4e-cfc2-411a-b90e-48054820e576}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="game.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sun_bullet_ex.h">
+      <Filter>头文件\Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +79,21 @@
     </ClInclude>
     <ClInclude Include="player_id.h">
       <Filter>头文件\player</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>头文件\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="pea_bullet.h">
+      <Filter>头文件\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="sun_bullet.h">
+      <Filter>头文件\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="status_bar.h">
+      <Filter>头文件\player</Filter>
+    </ClInclude>
+    <ClInclude Include="particle.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

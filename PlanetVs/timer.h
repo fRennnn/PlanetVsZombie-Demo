@@ -29,7 +29,7 @@ public:
 		void resume() {
 			paused = false;
 		}
-
+		/*过了一段时间后执行回调函数*/
 		void on_update(int delta) {
 			if (paused)
 				return;

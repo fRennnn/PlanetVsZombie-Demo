@@ -8,6 +8,7 @@
 #include"util.h"
 #include"platform.h"
 #include"player.h"
+#include"Bullet.h"
 #pragma comment(lib,"Winmm.lib")
 SceneManager scene_manager;
 IMAGE img_menu_bg;
@@ -85,11 +86,13 @@ Scene* selector_scene = nullptr;
 
 Camera main_camera;
 std::vector<Platform> platform_list;
-
+std::vector<Bullet*> bullet_list;
 Player* player_1 = nullptr;
 Player* player_2 = nullptr;
 bool is_debug = false;
 
+IMAGE* img_player_1_avatar = nullptr;		//Í·Ïñ
+IMAGE* img_player_2_avatar = nullptr;
 void flip_altas(Atlas& src, Atlas& dst)
 {
 	dst.clear();
@@ -155,7 +158,7 @@ void load_game_res()
 	flip_altas(altas_sunflower_die_right, altas_sunflower_die_left);
 
 	loadimage(&img_pea, _T("resources/pea.png"));
-	atlas_pea_break.load_from_file(_T("resources/pea_break_%d.png"), 3);
+	atlas_pea_break.load_from_file(_T("resources/pea_break_%d.pn g"), 3);
 	atlas_sun.load_from_file(_T("resources/sun_%d.png"), 5);
 	atlas_sun_explode.load_from_file(_T("resources/sun_explode_%d.png"), 5);
 	atlas_sun_ex.load_from_file(_T("resources/sun_ex_%d.png"), 5);
@@ -173,8 +176,14 @@ void load_game_res()
 	loadimage(&img_avatar_peashooter, _T("resources/avatar_peashooter.png"));
 	loadimage(&img_avatar_sunflower, _T("resources/avatar_sunflower.png"));
 
-	mciSendString(_T("open resources/bgm_game.mp3 alias bgm_game"), NULL, 0, NULL);
-	mciSendString(_T("open resources/bgm_menu.mp3 alias bgm_menu"), NULL, 0, NULL);
+	mciSendString(_T("open resources/bgm_game.mp4 alias bgm_game"), NULL, 0, NULL);
+	mciSendString(_T("open resources/bgm_menu.mp4 alias bgm_menu"), NULL, 0, NULL);
+	mciSendString(_T("open resources/bgm_select.mp4 alias bgm_select"), NULL, 0, NULL);
+	mciSendString(_T("open resources/DDT/new_bgm_game.mp3 alias ddtGame"), NULL, 0, NULL);
+	mciSendString(_T("open resources/DDT/new_bgm_menu.mp3 alias ddtMenu"), NULL, 0, NULL);
+	mciSendString(_T("open resources/DDT/new_bgm_select.mp3 alias ddtSele"), NULL, 0, NULL);
+	mciSendString(_T("open resources/DDT/new_bgm_win.mp3 alias ddtWin"), NULL, 0, NULL);
+
 	mciSendString(_T("open resources/pea_break_1.mp3 alias pea_break_1"), NULL, 0, NULL);
 	mciSendString(_T("open resources/pea_break_2.mp3 alias pea_break_2"), NULL, 0, NULL);
 	mciSendString(_T("open resources/pea_break_3.mp3 alias pea_break_3"), NULL, 0, NULL);

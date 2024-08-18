@@ -18,8 +18,8 @@ public:
 
 	void on_enter()
 	{
-		mciSendString(_T("play bgm_menu repeat from 0"), NULL, 0, NULL);
-		std::cout << "Menu???..." << std::endl;
+		mciSendString(_T("play ddtMenu repeat from 0"), NULL, 0, NULL);
+		std::cout << "In MenuScene..." << std::endl;
 	} 
 	void on_update(int delta) 
 	{
@@ -38,7 +38,7 @@ public:
 	}
 	void on_exit() 
 	{ 
-		
+		mciSendString(_T("stop ddtMenu"), NULL, 0, NULL);
 	}
 private:
 	Animation animation_peashooter_run_right;

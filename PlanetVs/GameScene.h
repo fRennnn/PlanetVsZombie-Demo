@@ -3,17 +3,26 @@
 #include<iostream>
 #include"SceneManager.h"
 #include"util.h"
+#include"status_bar.h"
 #include"platform.h"
 #include"player.h"
+#include"Bullet.h"
 extern SceneManager scene_manager;
 extern IMAGE img_sky;
 extern IMAGE img_hills;
 extern IMAGE img_platform_large;
 extern IMAGE img_platform_small;
+extern IMAGE* img_player_1_avatar;		//头像
+extern IMAGE* img_player_2_avatar;
+
+extern IMAGE img_1P_winner;					//胜负结算
+extern IMAGE img_2P_winner;
+extern IMAGE img_winner_bar;
 
 extern Camera main_camera;
 
 extern std::vector<Platform> platform_list;
+extern std::vector<Bullet*> bullet_list;
 extern Player* player_1;
 extern Player* player_2;
 class GameScene : public Scene
@@ -24,7 +33,37 @@ public:
 	
 	void on_enter()
 	{
-		std::cout << "Game..." << std::endl;
+		is_gameover = false;
+		is_slide_out_started = false;
+
+		pos_img_winner_bar.x = -img_winner_bar.getwidth();
+		pos_img_winner_bar.y = (getheight() - img_winner_bar.getheight()) / 2;
+		pos_x_img_winner_bar_dst = (getwidth() - img_winner_bar.getwidth()) / 2;
+
+		pos_img_winner_text.x = pos_img_winner_bar.x;
+		pos_img_winner_text.y = (getheight() - img_1P_winner.getheight()) / 2;
+		pos_x_img_winner_text_dst = (getwidth() - img_1P_winner.getwidth()) / 2;
+
+		timer_winner_slide_in.restart();
+		timer_winner_slide_in.set_wait_time(4000);
+		timer_winner_slide_in.set_one_shot(true);
+		timer_winner_slide_in.set_callback([&]() {
+			is_slide_out_started = true;
+			});
+
+		timer_winner_slide_out.restart();
+		timer_winner_slide_out.set_wait_time(4000);
+		timer_winner_slide_out.set_one_shot(true);
+		timer_winner_slide_out.set_callback([&]() {
+			scene_manager.switch_to(SceneManager::SceneType::Menu);
+			});
+
+		status_bar_1P.set_avatar(img_player_1_avatar);
+		status_bar_2P.set_avatar(img_player_2_avatar);
+
+		status_bar_1P.set_position(235, 625);
+		status_bar_2P.set_position(675, 625);
+		std::cout << "In the GameScene..." << std::endl;
 		player_1->set_position(200, 50);
 		player_2->set_position(975, 50);
 		pos_img_sky.x = (getwidth() - img_sky.getwidth()) / 2;
@@ -67,11 +106,69 @@ public:
 		small_platform_3.shape.right = (float)small_platform_3.render_position.x + img_platform_small.getwidth() - 40;
 		small_platform_3.shape.y = (float)small_platform_3.render_position.y + img_platform_small.getheight() / 2;
 
+		mciSendString(_T("play ddtGame repeat from 0"), NULL, 0, NULL);
 	}
 	void on_update(int delta)
 	{
+		//std::cout << "Game over : " << (int)is_gameover << std::endl;
 		player_1->on_update(delta);
 		player_2->on_update(delta);
+
+		main_camera.on_update(delta);
+
+		//删除子弹
+		//std::remove(first , last , op) if op return true  then delete this element
+		bullet_list.erase(std::remove_if(
+			bullet_list.begin(), bullet_list.end(),
+			[](const Bullet* bullet) {
+				bool deletable = bullet->check_can_remove();
+				if (deletable) { 
+					std::cout << "Delete Bullet" << std::endl;
+					delete bullet;
+				}
+				return deletable;
+			}),
+			bullet_list.end());
+		for (Bullet* bullet : bullet_list) {
+			bullet->on_update(delta);
+		 } 
+
+		const Vector2& position_player_1 = player_1->get_position();
+		const Vector2& position_player_2 = player_2->get_position();
+
+		if (position_player_1.y >= getheight())
+			player_1->set_hp(0);
+		if (position_player_2.y >= getheight())
+			player_2->set_hp(0);
+		if (player_1->get_hp() <= 0 || player_2->get_hp() <= 0 ) {
+			if (!is_gameover) {
+				mciSendString(_T("stop ddtGame"), NULL, 0, NULL);
+				mciSendString(_T("play ddtWin from 0"), NULL, 0, NULL);
+			}
+
+			is_gameover = true;
+		}
+		status_bar_1P.set_hp(player_1->get_hp());
+		status_bar_1P.set_mp(player_1->get_mp());
+		status_bar_2P.set_hp(player_2->get_hp());
+		status_bar_2P.set_mp(player_2->get_mp());
+
+		if (is_gameover) {
+
+			pos_img_winner_bar.x += (int)(speed_winner_bar * delta);
+			pos_img_winner_text.x += (int)(speed_winner_text * delta);
+
+			if (!is_slide_out_started) {
+				timer_winner_slide_in.on_update(delta);
+				if (pos_img_winner_bar.x > pos_x_img_winner_bar_dst)
+					pos_img_winner_bar.x = pos_x_img_winner_bar_dst;
+				if (pos_img_winner_text.x > pos_x_img_winner_text_dst)
+					pos_img_winner_text.x = pos_x_img_winner_text_dst;
+			}
+			else {
+				timer_winner_slide_out.on_update(delta);
+			}
+		}
 	}
 	void on_draw(const Camera& camera)
 	{
@@ -90,7 +187,18 @@ public:
 
 		player_1->on_draw(camera);
 		player_2->on_draw(camera);
-
+		for (const Bullet* bullet : bullet_list) {
+			bullet->on_draw(camera);
+		}
+		if (is_gameover) {
+			putimage_alpha(pos_img_winner_bar.x, pos_img_winner_bar.y, &img_winner_bar);
+			putimage_alpha(pos_img_winner_text.x, pos_img_winner_text.y,
+				player_1->get_hp() > 0 ? &img_1P_winner : &img_2P_winner);
+		}
+		else {
+			status_bar_1P.on_draw();
+			status_bar_2P.on_draw();
+		}
 	}
 	void on_input(const ExMessage& msg)
 	{
@@ -101,17 +209,37 @@ public:
 				case WM_KEYUP:
 					if (msg.vkcode == 0x51)
 						is_debug = !is_debug;
-					break;
-				
+					break;	
 				default:
 					break;
 		}
 	}
 	void on_exit()
 	{
-		
+		delete player_1; player_1 = nullptr;
+		delete player_2; player_2 = nullptr;
+
+		is_debug = false;
+
+		bullet_list.clear();
+		main_camera.reset();
 	}
 private:
 	POINT pos_img_sky { 0 };
 	POINT pos_img_hills{ 0 };
+
+	StatusBar status_bar_1P;
+	StatusBar status_bar_2P;
+
+	bool is_gameover = false;
+
+	POINT pos_img_winner_bar = { 0 };
+	POINT pos_img_winner_text = { 0 };
+	int pos_x_img_winner_bar_dst = 0;
+	int pos_x_img_winner_text_dst = 0;
+	Timer timer_winner_slide_in;
+	Timer timer_winner_slide_out;
+	bool is_slide_out_started = false;
+	int speed_winner_bar = 2;					//划出速度
+	int speed_winner_text = 2;
 };

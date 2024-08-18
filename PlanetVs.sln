@@ -5,6 +5,8 @@ VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlanetVs", "PlanetVs\PlanetVs.vcxproj", "{20A9B35D-9DB2-45DA-A79F-C419EC389EDA}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup3", "Setup3\Setup3.vdproj", "{292703D9-9E05-459F-A096-8210E277342F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,10 @@ Global
 		{20A9B35D-9DB2-45DA-A79F-C419EC389EDA}.Release|x64.Build.0 = Release|x64
 		{20A9B35D-9DB2-45DA-A79F-C419EC389EDA}.Release|x86.ActiveCfg = Release|Win32
 		{20A9B35D-9DB2-45DA-A79F-C419EC389EDA}.Release|x86.Build.0 = Release|Win32
+		{292703D9-9E05-459F-A096-8210E277342F}.Debug|x64.ActiveCfg = Debug
+		{292703D9-9E05-459F-A096-8210E277342F}.Debug|x86.ActiveCfg = Debug
+		{292703D9-9E05-459F-A096-8210E277342F}.Release|x64.ActiveCfg = Release
+		{292703D9-9E05-459F-A096-8210E277342F}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
