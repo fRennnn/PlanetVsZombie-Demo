@@ -22,6 +22,9 @@
     <Filter Include="头文件\Bullet">
       <UniqueIdentifier>{97a94e4e-cfc2-411a-b90e-48054820e576}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Camera">
+      <UniqueIdentifier>{4645afb6-a737-441a-b6b6-7a9d03b5f3a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="game.cpp">
@@ -59,9 +62,6 @@
     <ClInclude Include="vector2.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="timer.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -94,6 +94,12 @@
     </ClInclude>
     <ClInclude Include="particle.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>头文件\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneCamera.h">
+      <Filter>头文件\Camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

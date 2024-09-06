@@ -5,6 +5,7 @@
 #include"player_id.h"
 #include<graphics.h>
 #include<functional>
+#include<iostream>
 extern bool is_debug;
 class Bullet {
 public:
@@ -66,6 +67,7 @@ public:
 	}
 
 	virtual bool check_collision(const Vector2& position, const Vector2& size) {
+		//std::cout << "Checking..." << '\n';
 		return this->position.x + this->size.x / 2 >= position.x
 			&& this->position.x + this->size.x / 2 <= position.x + size.x
 			&& this->position.y + this->size.y / 2 >= position.y
@@ -77,9 +79,11 @@ public:
 		if (is_debug) {
 			setfillcolor(RGB(255, 255, 255));
 			setlinecolor(RGB(255, 255, 255));
-			rectangle((int)position.x, (int)position.y,
-				(int)(position.x + size.x), (int)(position.y + size.y));
-			solidcircle((int)(position.x + size.x / 2), (int)(position.y + size.y / 2), 5);
+			const Vector2& pos_camera = camera.get_position();
+
+			rectangle((int)(position.x - pos_camera.x), (int)(position.y - pos_camera.y),
+				(int)(position.x + size.x - pos_camera.x), (int)(position.y + size.y - pos_camera.y));
+			solidcircle((int)(position.x + size.x / 2 - pos_camera.x), (int)(position.y + size.y / 2 - pos_camera.y), 5);
 		}
 	}
 	virtual const Vector2& get_shotted() = 0;

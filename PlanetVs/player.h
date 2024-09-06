@@ -16,6 +16,7 @@ extern Atlas atlas_run_effect;
 extern Atlas atlas_jump_effect;
 extern Atlas atlas_land_effect;
 extern bool is_debug;
+extern Camera main_camera;
 class Player {
 public:
 	Player(bool facing_right = true):is_facing_right(facing_right) {
@@ -168,10 +169,12 @@ public:
 			}),
 			particle_list.end());
 
+		/*粒子系统*/
 		for (Particle& particle : particle_list)
 			particle.on_update(delta);
 		if (is_showing_sketch_frame)
 			sketch_image(current_animation->get_frame(), &img_sketch);
+
 		move_and_collide(delta);
 	}
 
@@ -206,8 +209,9 @@ public:
 		}
 		if (is_debug) {
 			setlinecolor(RGB( 0, 125, 255));
-			rectangle((int)position.x, (int)position.y,
-				(int)(position.x + size.x), (int)(position.y + size.y));
+			const Vector2& pos_camera = camera.get_position();
+			rectangle((int)(position.x - pos_camera.x), (int)(position.y - pos_camera.y),
+				(int)(position.x + size.x - pos_camera.x), (int)(position.y + size.y - pos_camera.y));
 		}
 	}
 
@@ -229,12 +233,14 @@ public:
 								break;
 							case 0x57:// 'W'
 								on_jump();
+								//std::cout << "Jumping" << std::endl;
 								break;
 							case 0x46://	'F'
 								if (can_attack) {
 									on_attack();
 									//std::cout << "Shoot From Peashooter!" << std::endl;
 									can_attack = false;
+									std::cout << "P1 { "<<this->position.x << " , " << this->position.y << " }\n";
 									timer_attack_cd.restart();
 								}
 								break;
@@ -260,12 +266,14 @@ public:
 							break;
 						case VK_UP:
 							on_jump();
+							//std::cout << "Jumping" << std::endl;
 							break;
 						case VK_OEM_PERIOD: // ' . '
 							if (can_attack) {
 								on_attack();
 								//std::cout << "Shoot from SunFLower!" << std::endl;
 								can_attack = false;
+								std::cout << "P2 { " << this->position.x <<" , " << this->position.y << " }\n";
 								timer_attack_cd.restart();
 							}
 							break;
@@ -372,8 +380,12 @@ public:
 					{
 						position.y = shape.y - size.y;
 						velocity.y = 0;
-						if (last_velocity_y != 0)//判断落地条件
+						//判断落地条件
+						if (last_velocity_y != 0){
 							on_land();
+						}
+							
+							
 						break;
 					}
 				}
@@ -384,7 +396,8 @@ public:
 					if (!bullet->get_valid() || bullet->get_collide_target() != id)
 						continue;
 					if (bullet->check_collision(position, size)) {//检测子弹碰撞后的处理
-						//std::cout << "GetShotted" << std::endl;
+						//std::cout << "GetShotted" <<'\n';
+						
 						make_invulnerable();
 						make_getShotted();
 						bullet->on_collide();
@@ -422,6 +435,11 @@ public:
 
 	void set_hp(int val) {
 		hp = val;
+	}
+
+	void check_camera_pos() {
+		Vector2 my_pos = get_position();
+		Vector2 camera_pos = main_camera.get_position();
 	}
 protected:
 	const float run_velocity = 0.55f;

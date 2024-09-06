@@ -52,5 +52,13 @@ public:
 			return Vector2(0, 0);
 
 		return Vector2(x / len, y / len);
-	}
+	}	
 };
+//you NEED this inline!!!
+inline float abs_x(const Vector2& left, const Vector2& right) {
+	return std::abs(left.x - right.x);
+}
+
+inline float abs_y(const Vector2& left, const Vector2& right) {
+	return std::abs(left.y - right.y);
+}

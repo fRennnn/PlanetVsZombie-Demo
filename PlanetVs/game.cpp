@@ -85,6 +85,8 @@ Scene* game_scene = nullptr;
 Scene* selector_scene = nullptr;
 
 Camera main_camera;
+SceneCamera scene_camera;
+
 std::vector<Platform> platform_list;
 std::vector<Bullet*> bullet_list;
 Player* player_1 = nullptr;
@@ -226,6 +228,7 @@ int main()
 		while (peekmessage(&msg))
 		{
 			scene_manager.on_input(msg);
+			//std::cout << "Check input...\n";
 		}
 
 		static DWORD last_tick_time = GetTickCount();

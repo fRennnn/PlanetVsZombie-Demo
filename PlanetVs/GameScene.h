@@ -7,6 +7,7 @@
 #include"platform.h"
 #include"player.h"
 #include"Bullet.h"
+#include"SceneCamera.h"
 extern SceneManager scene_manager;
 extern IMAGE img_sky;
 extern IMAGE img_hills;
@@ -20,6 +21,7 @@ extern IMAGE img_2P_winner;
 extern IMAGE img_winner_bar;
 
 extern Camera main_camera;
+extern SceneCamera scene_camera;
 
 extern std::vector<Platform> platform_list;
 extern std::vector<Bullet*> bullet_list;
@@ -72,7 +74,7 @@ public:
 		pos_img_hills.x = (getwidth() - img_hills.getwidth()) / 2;
 		pos_img_hills.y = (getheight() - img_hills.getheight()) / 2;
 
-		platform_list.resize(4);
+		platform_list.resize(5);
 
 		Platform& large_platform = platform_list[0];
 		large_platform.img = &img_platform_large;
@@ -106,6 +108,14 @@ public:
 		small_platform_3.shape.right = (float)small_platform_3.render_position.x + img_platform_small.getwidth() - 40;
 		small_platform_3.shape.y = (float)small_platform_3.render_position.y + img_platform_small.getheight() / 2;
 
+		Platform& small_platform_4 = platform_list[4];
+		small_platform_4.img = &img_platform_small;
+		small_platform_4.render_position.x = 1255;
+		small_platform_4.render_position.y = 225;
+		small_platform_4.shape.left = (float)small_platform_4.render_position.x + 40;
+		small_platform_4.shape.right = (float)small_platform_4.render_position.x + img_platform_small.getwidth() - 40;
+		small_platform_4.shape.y = (float)small_platform_4.render_position.y + img_platform_small.getheight() / 2;
+
 		mciSendString(_T("play ddtGame repeat from 0"), NULL, 0, NULL);
 	}
 	void on_update(int delta)
@@ -123,7 +133,7 @@ public:
 			[](const Bullet* bullet) {
 				bool deletable = bullet->check_can_remove();
 				if (deletable) { 
-					std::cout << "Delete Bullet" << std::endl;
+					//std::cout << "Delete Bullet" << std::endl;
 					delete bullet;
 				}
 				return deletable;
@@ -135,7 +145,20 @@ public:
 
 		const Vector2& position_player_1 = player_1->get_position();
 		const Vector2& position_player_2 = player_2->get_position();
-
+		bool two_inside = main_camera.two_inside(position_player_1, position_player_2);
+		bool can_moveback = main_camera.can_moveback(position_player_1, position_player_2);
+		bool can_moveforward = main_camera.can_moveforward(position_player_1, position_player_2);
+		if (two_inside && (can_moveback ^ can_moveforward)) {
+			main_camera.can_move();
+			if (can_moveforward) {
+				main_camera.set_direction(1);
+				std::cout << "State can_moveforward" << can_moveforward << '\n';
+			}
+			else {
+				main_camera.set_direction(0);
+				std::cout << "State can_moveback" << can_moveforward << '\n';
+			}
+		}
 		if (position_player_1.y >= getheight())
 			player_1->set_hp(0);
 		if (position_player_2.y >= getheight())
@@ -170,25 +193,26 @@ public:
 			}
 		}
 	}
-	void on_draw(const Camera& camera)
+	void on_draw(const Camera& main_camera)
 	{
 		//背景
-		putimage_alpha(camera,pos_img_sky.x, pos_img_sky.y, &img_sky);
-		putimage_alpha(camera,pos_img_hills.x, pos_img_hills.y, &img_hills);
-		putimage_alpha(125, 550, &img_platform_large);
+		putimage_alpha(main_camera,pos_img_sky.x, pos_img_sky.y, &img_sky);
+		putimage_alpha(main_camera,pos_img_hills.x, pos_img_hills.y, &img_hills);
+		putimage_alpha(main_camera, pos_img_platform.x, pos_img_platform.y, &img_platform_large);//1036 width
+		//putimage_alpha(125, 550, &img_platform_large);
 		settextcolor(RGB(255, 0, 0));
 		for (const Platform& platform : platform_list)
-			platform.on_draw(camera);
+			platform.on_draw(main_camera);
 
 		if (is_debug) {
 			settextcolor(RGB(255, 0, 0));
 			outtextxy(15, 15,_T("已开启调试模式^^,按'Q' 关闭"));
 		}
 
-		player_1->on_draw(camera);
-		player_2->on_draw(camera);
+		player_1->on_draw(main_camera);
+		player_2->on_draw(main_camera);
 		for (const Bullet* bullet : bullet_list) {
-			bullet->on_draw(camera);
+			bullet->on_draw(main_camera);
 		}
 		if (is_gameover) {
 			putimage_alpha(pos_img_winner_bar.x, pos_img_winner_bar.y, &img_winner_bar);
@@ -220,13 +244,13 @@ public:
 		delete player_2; player_2 = nullptr;
 
 		is_debug = false;
-
 		bullet_list.clear();
 		main_camera.reset();
 	}
 private:
 	POINT pos_img_sky { 0 };
 	POINT pos_img_hills{ 0 };
+	POINT pos_img_platform{ 125,550 };
 
 	StatusBar status_bar_1P;
 	StatusBar status_bar_2P;
