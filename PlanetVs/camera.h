@@ -94,11 +94,15 @@ public:
 	}
 
 	bool can_moveforward(const Vector2& left, const Vector2& right) {
+		/*std::cout << "left.x = " << left.x << " cam + cam_wid = " << position.x + camera_width << '\n';
+		std::cout << "right.x = " << right.x << " cam + cam_wid = " << position.x + camera_width << '\n';*/
 		return left.x >= position.x + camera_width || right.x >= position.x + camera_width;
 	}
 
 	bool can_moveback(const Vector2& left, const Vector2& right) {
-		return left.x <  position.x + 10 || right.x < position.x + 10;
+		/*std::cout << "left.x = " << left.x << " cam.x = " << position.x + 10 << '\n';
+		std::cout << "right.x = " << right.x << " cam.x = " << position.x + 10 << '\n';*/
+		return left.x <  position.x  || right.x < position.x ;
 	}
 private: 
 	Vector2 position;
@@ -114,5 +118,5 @@ private:
 	float camera_move_distance = 0.1f;
 	float direction = 1.0f;
 	Direction now_direction;
-	const int camera_width = 1036;
+	const int camera_width = 1250;
 };

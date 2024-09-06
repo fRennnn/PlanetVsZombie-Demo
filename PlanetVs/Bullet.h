@@ -7,6 +7,7 @@
 #include<functional>
 #include<iostream>
 extern bool is_debug;
+extern Camera main_camera;
 class Bullet {
 public:
 	Bullet() = default;
@@ -99,8 +100,9 @@ protected:
 	PlayerID target_id = PlayerID::P1;
 
 protected:
+	/*检测子弹是否在摄像机范围内*/
 	bool check_if_exceeds_screen() {
-		return (position.x + size.x <= 0 || position.x >= getwidth()
-			|| position.y + size.y <= 0 || position.y >= getheight());
+		return (position.x + size.x + main_camera.get_position().x <= 0 || position.x >= getwidth() + main_camera.get_position().x
+			|| position.y + size.y + main_camera.get_position().y <= 0 || position.y >= getheight() + main_camera.get_position().y);
 	}
 };

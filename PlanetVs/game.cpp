@@ -85,7 +85,6 @@ Scene* game_scene = nullptr;
 Scene* selector_scene = nullptr;
 
 Camera main_camera;
-SceneCamera scene_camera;
 
 std::vector<Platform> platform_list;
 std::vector<Bullet*> bullet_list;

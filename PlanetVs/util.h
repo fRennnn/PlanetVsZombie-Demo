@@ -1,7 +1,6 @@
 #pragma once
 #include<graphics.h>
 #include"camera.h"
-#include"SceneCamera.h"
 #pragma comment(lib,"MSIMG32.LIB")
 inline void flip_image(IMAGE* src, IMAGE* dst)
 {
@@ -49,15 +48,6 @@ inline void putimage_alpha(const Camera& camera, int dst_x, int dst_y, IMAGE* im
 	const Vector2& pos_camera = camera.get_position();
 	AlphaBlend(GetImageHDC(GetWorkingImage()), (int)(dst_x - pos_camera.x), (int)(dst_y - pos_camera.y), 
 		w, h,GetImageHDC(img), 0, 0, w, h, { AC_SRC_OVER,0,255,AC_SRC_ALPHA });
-}
-
-inline void putimage_alpha(SceneCamera& camera, int dst_x, int dst_y, IMAGE* img)
-{
-	int w = img->getwidth();
-	int h = img->getheight();
-	const Vector2& pos_camera = camera.get_position();
-	AlphaBlend(GetImageHDC(GetWorkingImage()), (int)(dst_x - pos_camera.x), (int)(dst_y - pos_camera.y),
-		w, h, GetImageHDC(img), 0, 0, w, h, { AC_SRC_OVER,0,255,AC_SRC_ALPHA });
 }
 
 inline void line(const Camera& camera, int x1, int y1, int x2, int y2) {

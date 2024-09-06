@@ -142,7 +142,6 @@ public:
 			bullet->on_update(delta);
 		 } 
 
-		/*ÉãÏñ»úÔË¶¯*/
 		const Vector2& position_player_1 = player_1->get_position();
 		const Vector2& position_player_2 = player_2->get_position();
 		bool two_inside = main_camera.two_inside(position_player_1, position_player_2);

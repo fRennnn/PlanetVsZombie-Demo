@@ -384,8 +384,6 @@ public:
 						if (last_velocity_y != 0){
 							on_land();
 						}
-							
-							
 						break;
 					}
 				}

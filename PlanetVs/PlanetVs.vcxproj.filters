@@ -98,8 +98,5 @@
     <ClInclude Include="camera.h">
       <Filter>头文件\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="SceneCamera.h">
-      <Filter>头文件\Camera</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
