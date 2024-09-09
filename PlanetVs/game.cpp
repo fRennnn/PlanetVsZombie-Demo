@@ -9,6 +9,8 @@
 #include"platform.h"
 #include"player.h"
 #include"Bullet.h"
+#include<chrono>
+
 #pragma comment(lib,"Winmm.lib")
 SceneManager scene_manager;
 IMAGE img_menu_bg;
@@ -39,7 +41,9 @@ IMAGE img_sunflower_selector_bg_left;
 IMAGE img_sunflower_selector_bg_right;
 
 IMAGE img_sky;
+IMAGE img_sky_mirror;
 IMAGE img_hills;
+IMAGE img_hills_mirror;
 IMAGE img_platform_large;
 IMAGE img_platform_small;
 
@@ -133,10 +137,12 @@ void load_game_res()
 
 	loadimage(&img_vs, _T("resources/VS.png"));
 	loadimage(&img_sky, _T("resources/sky.png"));
+	flip_image(&img_sky, &img_sky_mirror);
 	loadimage(&img_hills, _T("resources/hills.png"));
+	flip_image(&img_hills, &img_hills_mirror);
 	loadimage(&img_platform_large, _T("resources/platform_large.png"));
 	loadimage(&img_platform_small, _T("resources/platform_small.png"));
-
+	
 	loadimage(&img_1P_cursor, _T("resources/1P_cursor.png"));
 	loadimage(&img_2P_cursor, _T("resources/2P_cursor.png")); 
 
@@ -198,18 +204,37 @@ void load_game_res()
 	mciSendString(_T("open resources/ui_switch.wav alias ui_switch"), NULL, 0, NULL);
 	mciSendString(_T("open resources/ui_win.wav alias ui_win"), NULL, 0, NULL);
 }
+
+struct TimerForTest {
+	    std::chrono::time_point<std::chrono::steady_clock> start, end;
+	    std::chrono::duration<float> duration;
+		TimerForTest() {
+	        start = std::chrono::high_resolution_clock::now();
+	    }
+	    ~TimerForTest() {
+	        end = std::chrono::high_resolution_clock::now();
+	        duration = end - start;
+	
+	        float ms = duration.count() * 1000.0f;
+	        std::cout << "Timer took " << ms << " ms" << std::endl;
+	    }
+	};
 int main()
 {
 	ExMessage msg;
 	const int FPS = 60;
 	
-	/*DWORD frame_start_time = GetTickCount();*/
+	
 	
 	std::cout << "Loading..." << std::endl;
 	load_game_res();
-	/*DWORD frame_end_time = GetTickCount();
-	DWORD frame_delta_time = frame_end_time - frame_start_time;
-	std::cout << "Done...You spend "<< frame_delta_time << "s" << std::endl;*/
+	/*DWORD frame_start_time = GetTickCount();*/
+
+	// do_something
+
+	/*DWORD frame_end_time1 = GetTickCount();
+		DWORD frame_delta_time1 = frame_end_time1 - frame_start_time;
+		std::cout << "Done...You spend " << frame_delta_time1 << "s In input()\n";*/
 	initgraph(1280, 720, EW_SHOWCONSOLE);
 
 	settextstyle(28, 0, _T("IPix"));
@@ -226,14 +251,18 @@ int main()
 		/*事件处理*/
 		while (peekmessage(&msg))
 		{
+			//TimerForTest tmp;
 			scene_manager.on_input(msg);
 			//std::cout << "Check input...\n";
 		}
+		
 
+		
 		static DWORD last_tick_time = GetTickCount();
 		DWORD current_tick_time = GetTickCount();
 		DWORD delta_tick = current_tick_time - last_tick_time;
 		scene_manager.on_update(delta_tick);
+		//std::cout << "UpDATE...\n";
 		last_tick_time = current_tick_time;
 
 		cleardevice();

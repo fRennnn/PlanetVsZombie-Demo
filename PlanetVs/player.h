@@ -70,7 +70,7 @@ public:
 			});
 
 		animation_jump_effect.set_atlas(&atlas_jump_effect);
-		animation_jump_effect.set_interval(25);
+		animation_jump_effect.set_interval(50);
 		animation_jump_effect.set_loop(false);
 		animation_jump_effect.set_callback([&]() {
 			is_jump_effect_visible = false;
@@ -101,17 +101,24 @@ public:
 	}
 
 	virtual void on_jump(){
-
-		if (velocity.y != 0 || is_attacking_ex)
+		//std::cout << "Jumping......------------------------=================\n";
+		if (!can_double_jump || is_attacking_ex)
 			return;
 
-		velocity.y += jump_velocity;
-		is_jump_effect_visible = true;
-		animation_jump_effect.reset();
+		if (jump_count < 2) {
+			//std::cout << jump_count<<'\n';
+			velocity.y = jump_velocity;
+			is_jump_effect_visible = true;
+			animation_jump_effect.reset();
 
-		IMAGE* effect_frame = animation_jump_effect.get_frame();
-		position_jump_effect.x = position.x + (size.x - effect_frame->getwidth()) / 2;
-		position_jump_effect.y = position.y + size.y - effect_frame->getheight();
+			IMAGE* effect_frame = animation_jump_effect.get_frame();
+			position_jump_effect.x = position.x + (size.x - effect_frame->getwidth()) / 2;
+			position_jump_effect.y = position.y + size.y - effect_frame->getheight();
+			++jump_count;
+			if (jump_count == 2)
+				can_double_jump = false;
+		}
+		
 	}
 
 	virtual void on_land() {
@@ -121,9 +128,12 @@ public:
 		IMAGE* effect_frame = animation_land_effect.get_frame();
 		position_land_effect.x = position.x + (size.x - effect_frame->getwidth()) / 2;
 		position_land_effect.y = position.y + size.y - effect_frame->getheight();
+		jump_count = 0;
+		can_double_jump = true;
 	}
 
 	virtual void on_update(int delta) {
+		//std::cout << "Player " << (int)id + 1 << " Updateing...\n";
 		int direction = is_right_key_down - is_left_key_down;
 
 		if (direction != 0) {
@@ -174,6 +184,7 @@ public:
 			particle.on_update(delta);
 		if (is_showing_sketch_frame)
 			sketch_image(current_animation->get_frame(), &img_sketch);
+
 
 		move_and_collide(delta);
 	}
@@ -232,15 +243,15 @@ public:
 								is_right_key_down = true;
 								break;
 							case 0x57:// 'W'
-								on_jump();
-								//std::cout << "Jumping" << std::endl;
-								break;
+								{
+									on_jump();
+									break;
+								}
 							case 0x46://	'F'
 								if (can_attack) {
 									on_attack();
-									//std::cout << "Shoot From Peashooter!" << std::endl;
 									can_attack = false;
-									std::cout << "P1 { "<<this->position.x << " , " << this->position.y << " }\n";
+									//std::cout << "P1 { "<<this->position.x << " , " << this->position.y << " }\n";
 									timer_attack_cd.restart();
 								}
 								break;
@@ -265,15 +276,15 @@ public:
 							is_right_key_down = true;
 							break;
 						case VK_UP:
+						{
 							on_jump();
-							//std::cout << "Jumping" << std::endl;
 							break;
+						}
 						case VK_OEM_PERIOD: // ' . '
 							if (can_attack) {
 								on_attack();
-								//std::cout << "Shoot from SunFLower!" << std::endl;
 								can_attack = false;
-								std::cout << "P2 { " << this->position.x <<" , " << this->position.y << " }\n";
+								//std::cout << "P2 { " << this->position.x <<" , " << this->position.y << " }\n";
 								timer_attack_cd.restart();
 							}
 							break;
@@ -362,7 +373,13 @@ public:
 
 		if (hp <= 0)
 			return;
-
+		/*2024 9/9留
+			我说怎么一按跳跃键就无敌，原来if的条件本来就是false^^
+			*/
+		//std::cout << "P" <<(int)id+1<<" 's Velocity.y = " << velocity.y << "\n";
+		/*if (velocity.y <= 0) {
+			std::cout << "Error!!!!!!!!!!!!!!!"<<"P" <<(int)id+1<<" 'sVelocity.y = { "<< velocity.y<<" }\n";
+		}*/
 		if (velocity.y > 0)
 		{
 			for (const Platform& platform : platform_list)//平台碰撞逻辑 从下到上可以穿过
@@ -388,28 +405,42 @@ public:
 					}
 				}
 			}
+		}
+		/*这个别放上面,不然就是"为什么我跳跃有无敌效果啊^^?"了*/
+		check_bullet_collide();
+	}
+
+	inline void check_bullet_collide(){
 			/*检测非无敌情况*/
 			if (!is_invulnerable) {
+				//std::cout << "---------------------------------------\n";
 				for (Bullet* bullet : bullet_list) {
-					if (!bullet->get_valid() || bullet->get_collide_target() != id)
+					if (!bullet->get_valid() || bullet->get_collide_target() != id) {
+						//std::cout << "=======================\n";
+						//std::cout << "First is "<< !bullet->get_valid()<<" \n";//?
+						//std::cout << "Get_collide_target is " << (int)bullet->get_collide_target() + 1 << " \n";
+						//std::cout << "Now id is " << (int)id + 1 << " \n";
+						//std::cout << "=======================\n";
 						continue;
+					}
+
 					if (bullet->check_collision(position, size)) {//检测子弹碰撞后的处理
 						//std::cout << "GetShotted" <<'\n';
-						
+						//std::cout << "This bullet is valid----------------------------------\n";
 						make_invulnerable();
-						make_getShotted();
+
 						bullet->on_collide();
 						bullet->set_valid(false);
 						hp -= bullet->get_damage();
-
-						if(is_getShotted)// 受击的话就设置反方向的速度
+						make_getShotted();
+						if (is_getShotted)// 受击的话就设置反方向的速度
 						{
 							//std::cout << "Start X velocity" << std::endl;
 							normal_hurted_direction = bullet->get_position() - position;
 							velocity.x = normal_hurted_direction.x <= 0 ? bullet->get_shotted().x : -bullet->get_shotted().x;
 							velocity.y = bullet->get_shotted().y;
 						}
-						
+
 						last_hurt_direction = bullet->get_position() - position;
 						if (hp <= 0) {
 							velocity.x = last_hurt_direction.x < 0 ? 1.20f : -1.20f;	//飞起来!
@@ -418,11 +449,9 @@ public:
 						//std::cout << "Player: " << (int)this->id + 1 << " hp -- " << std::endl;
 					}
 				}
+				//std::cout << "---------------------------------------\n";
 			}
-
-		}
 	}
-
 	int get_hp() const {
 		return hp;
 	}
@@ -435,14 +464,10 @@ public:
 		hp = val;
 	}
 
-	void check_camera_pos() {
-		Vector2 my_pos = get_position();
-		Vector2 camera_pos = main_camera.get_position();
-	}
 protected:
 	const float run_velocity = 0.55f;
 	const float gravity = 1.6e-3f;
-	const float jump_velocity = -0.85f;
+	const float jump_velocity = -0.7f;
 
 	
 
@@ -456,25 +481,31 @@ protected:
 	Animation animation_land_effect;
 	Animation animation_die_left;
 	Animation animation_die_right;
-	bool is_jump_effect_visible = false;			//跳跃动画是否可见
-	bool is_land_effect_visible = false;
-
-	Vector2 position_jump_effect;					//跳跃动画播放位置
-	Vector2 position_land_effect;
-	Animation* current_animation = nullptr; 
-	PlayerID id = PlayerID::P1;
-	int mp = 0;
-	int hp = 100;
-
-	Vector2 position;
-	Vector2 velocity;
-	Vector2 size;
 	Animation animation_attack_ex_left;
 	Animation animation_attack_ex_right;
+	Animation* current_animation = nullptr;
+
+	bool is_jump_effect_visible = false;			//跳跃动画是否可见
+	bool is_land_effect_visible = false;
 
 	bool is_left_key_down = false;					//判断按键按下情况
 	bool is_right_key_down = false;
 	bool is_facing_right = true;
+	int jump_count = 0;								//跳跃相关
+	bool can_double_jump = true;
+
+	PlayerID id = PlayerID::P1;
+	int mp = 0;
+	int hp = 100;
+	Vector2 position_jump_effect;					//跳跃动画播放位置
+	Vector2 position_land_effect;
+
+	Vector2 position;
+	Vector2 velocity;
+	Vector2 size;
+	
+
+	
 
 	int attack_cd = 500;									//人物功能
 	bool can_attack = true;

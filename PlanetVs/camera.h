@@ -16,7 +16,7 @@ public:
 				reset();
 			});
 		timer_map_rolling.set_one_shot(true);
-		timer_map_rolling.set_wait_time(200);
+		timer_map_rolling.set_wait_time(100);
 		timer_map_rolling.set_callback([&]()
 			{
 				map_roll = false;
@@ -115,7 +115,7 @@ private:
 	
 	//Move the Camera
 	bool map_roll = false;
-	float camera_move_distance = 0.1f;
+	float camera_move_distance = 0.55f;
 	float direction = 1.0f;
 	Direction now_direction;
 	const int camera_width = 1250;

@@ -96,7 +96,7 @@ public:
 	
 	
 private:
-	const float speed_pea = 0.75f;
+	const float speed_pea = 1.0f;
 	const float speed_pea_ex = 1.5f;
 	const int attack_ex_duration = 2500;
 	

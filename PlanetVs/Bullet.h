@@ -68,7 +68,13 @@ public:
 	}
 
 	virtual bool check_collision(const Vector2& position, const Vector2& size) {
-		//std::cout << "Checking..." << '\n';
+		//std::cout << "\nIn check_collision()\|\|\|\|/" << '\n';
+		if (this->position.x + this->size.x / 2 >= position.x
+			&& this->position.x + this->size.x / 2 <= position.x + size.x
+			&& this->position.y + this->size.y / 2 >= position.y
+			&& this->position.y + this->size.y / 2 <= position.y + size.y) {
+			//std::cout<<"This work...\n";
+		}
 		return this->position.x + this->size.x / 2 >= position.x
 			&& this->position.x + this->size.x / 2 <= position.x + size.x
 			&& this->position.y + this->size.y / 2 >= position.y
@@ -102,7 +108,7 @@ protected:
 protected:
 	/*检测子弹是否在摄像机范围内*/
 	bool check_if_exceeds_screen() {
-		return (position.x + size.x + main_camera.get_position().x <= 0 || position.x >= getwidth() + main_camera.get_position().x
+		return (position.x + size.x  <= main_camera.get_position().x || position.x >= getwidth() + main_camera.get_position().x
 			|| position.y + size.y + main_camera.get_position().y <= 0 || position.y >= getheight() + main_camera.get_position().y);
 	}
 };

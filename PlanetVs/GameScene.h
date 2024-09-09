@@ -10,7 +10,9 @@
 
 extern SceneManager scene_manager;
 extern IMAGE img_sky;
+extern IMAGE img_sky_mirror;
 extern IMAGE img_hills;
+extern IMAGE img_hills_mirror;
 extern IMAGE img_platform_large;
 extern IMAGE img_platform_small;
 extern IMAGE* img_player_1_avatar;		//Í·Ïñ
@@ -62,6 +64,8 @@ public:
 		status_bar_1P.set_avatar(img_player_1_avatar);
 		status_bar_2P.set_avatar(img_player_2_avatar);
 
+		/*ÉèÖÃÔªËØ×ø±ê*/
+
 		status_bar_1P.set_position(235, 625);
 		status_bar_2P.set_position(675, 625);
 		std::cout << "In the GameScene..." << std::endl;
@@ -72,6 +76,7 @@ public:
 
 		pos_img_hills.x = (getwidth() - img_hills.getwidth()) / 2;
 		pos_img_hills.y = (getheight() - img_hills.getheight()) / 2;
+
 
 		platform_list.resize(5);
 
@@ -132,7 +137,7 @@ public:
 			[](const Bullet* bullet) {
 				bool deletable = bullet->check_can_remove();
 				if (deletable) { 
-					std::cout << "Delete Bullet" << std::endl;
+					//std::cout << "Delete Bullet" << std::endl;
 					delete bullet;
 				}
 				return deletable;
@@ -197,8 +202,14 @@ public:
 	void on_draw(const Camera& main_camera)
 	{
 		//±³¾°
-		putimage_alpha(main_camera,pos_img_sky.x, pos_img_sky.y, &img_sky);
+		putimage_alpha(main_camera, pos_img_sky.x - img_sky.getwidth(), pos_img_sky.y, &img_sky_mirror);
+		putimage_alpha(main_camera, pos_img_sky.x, pos_img_sky.y, &img_sky);
+		putimage_alpha(main_camera, pos_img_sky.x + img_sky.getwidth(), pos_img_sky.y, &img_sky_mirror);/*×óÖĞÓÒË³Ğò*/
+
 		putimage_alpha(main_camera,pos_img_hills.x, pos_img_hills.y, &img_hills);
+		putimage_alpha(main_camera, pos_img_hills.x + img_hills.getwidth(), pos_img_hills.y, &img_hills_mirror);
+		putimage_alpha(main_camera, pos_img_hills.x - img_hills.getwidth(), pos_img_hills.y, &img_hills_mirror);
+
 		putimage_alpha(main_camera, pos_img_platform.x, pos_img_platform.y, &img_platform_large);//1036 width
 		//putimage_alpha(125, 550, &img_platform_large);
 		settextcolor(RGB(255, 0, 0));
