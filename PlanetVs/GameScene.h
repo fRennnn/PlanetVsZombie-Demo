@@ -11,6 +11,11 @@
 extern SceneManager scene_manager;
 extern IMAGE img_sky;
 extern IMAGE img_sky_mirror;
+extern IMAGE img_sky1;
+extern IMAGE img_sky2;
+extern IMAGE img_sky3;
+extern IMAGE img_sky4;
+
 extern IMAGE img_hills;
 extern IMAGE img_hills_mirror;
 extern IMAGE img_platform_large;
@@ -77,8 +82,8 @@ public:
 		pos_img_hills.x = (getwidth() - img_hills.getwidth()) / 2;
 		pos_img_hills.y = (getheight() - img_hills.getheight()) / 2;
 
-
-		platform_list.resize(5);
+		/*平台数据初始化*/
+		platform_list.resize(5);	
 
 		Platform& large_platform = platform_list[0];
 		large_platform.img = &img_platform_large;
@@ -202,13 +207,19 @@ public:
 	void on_draw(const Camera& main_camera)
 	{
 		//背景
-		putimage_alpha(main_camera, pos_img_sky.x - img_sky.getwidth(), pos_img_sky.y, &img_sky_mirror);
+		/*putimage_alpha(main_camera, pos_img_sky.x - img_sky.getwidth(), pos_img_sky.y, &img_sky_mirror);
 		putimage_alpha(main_camera, pos_img_sky.x, pos_img_sky.y, &img_sky);
-		putimage_alpha(main_camera, pos_img_sky.x + img_sky.getwidth(), pos_img_sky.y, &img_sky_mirror);/*左中右顺序*/
+		putimage_alpha(main_camera, pos_img_sky.x + img_sky.getwidth(), pos_img_sky.y, &img_sky_mirror);*/
+		/*左中右顺序*/
 
-		putimage_alpha(main_camera,pos_img_hills.x, pos_img_hills.y, &img_hills);
+		putimage_alpha(main_camera, pos_img_sky.x, pos_img_sky.y, &img_sky1);
+		putimage_alpha(main_camera, pos_img_sky.x, pos_img_sky.y, &img_sky2);
+		putimage_alpha(main_camera, pos_img_sky.x, pos_img_sky.y, &img_sky3);
+		putimage_alpha(main_camera, pos_img_sky.x, pos_img_sky.y, &img_sky4);
+		
+		/*putimage_alpha(main_camera,pos_img_hills.x, pos_img_hills.y, &img_hills);
 		putimage_alpha(main_camera, pos_img_hills.x + img_hills.getwidth(), pos_img_hills.y, &img_hills_mirror);
-		putimage_alpha(main_camera, pos_img_hills.x - img_hills.getwidth(), pos_img_hills.y, &img_hills_mirror);
+		putimage_alpha(main_camera, pos_img_hills.x - img_hills.getwidth(), pos_img_hills.y, &img_hills_mirror);*/
 
 		putimage_alpha(main_camera, pos_img_platform.x, pos_img_platform.y, &img_platform_large);//1036 width
 		//putimage_alpha(125, 550, &img_platform_large);

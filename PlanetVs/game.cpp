@@ -39,13 +39,17 @@ IMAGE img_peashooter_selector_bg_left;
 IMAGE img_peashooter_selector_bg_right;
 IMAGE img_sunflower_selector_bg_left;
 IMAGE img_sunflower_selector_bg_right;
-
-IMAGE img_sky;
+										//±³¾°ËØ²Ä
+IMAGE img_sky;	
 IMAGE img_sky_mirror;
 IMAGE img_hills;
 IMAGE img_hills_mirror;
 IMAGE img_platform_large;
 IMAGE img_platform_small;
+IMAGE img_sky1;
+IMAGE img_sky2;
+IMAGE img_sky3;
+IMAGE img_sky4;
 
 Atlas altas_peashooter_idle_left;
 Atlas altas_peashooter_idle_right;
@@ -135,14 +139,23 @@ void load_game_res()
 	loadimage(&img_sunflower_selector_bg_right, _T("resources/sunflower_selector_background.png"));
 	flip_image(&img_sunflower_selector_bg_right, &img_sunflower_selector_bg_left);
 
+	//±³¾°ËØ²Ä
 	loadimage(&img_vs, _T("resources/VS.png"));
 	loadimage(&img_sky, _T("resources/sky.png"));
 	flip_image(&img_sky, &img_sky_mirror);
+
 	loadimage(&img_hills, _T("resources/hills.png"));
 	flip_image(&img_hills, &img_hills_mirror);
+
 	loadimage(&img_platform_large, _T("resources/platform_large.png"));
 	loadimage(&img_platform_small, _T("resources/platform_small.png"));
-	
+
+	loadimage(&img_sky1, _T("resources/Clouds/Clouds 1/1.png"));
+	loadimage(&img_sky2, _T("resources/Clouds/Clouds 1/2.png"));
+	loadimage(&img_sky3, _T("resources/Clouds/Clouds 1/3.png"));
+	loadimage(&img_sky4, _T("resources/Clouds/Clouds 1/4.png"));
+
+
 	loadimage(&img_1P_cursor, _T("resources/1P_cursor.png"));
 	loadimage(&img_2P_cursor, _T("resources/2P_cursor.png")); 
 
