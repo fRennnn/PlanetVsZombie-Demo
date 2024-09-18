@@ -212,10 +212,14 @@ public:
 		putimage_alpha(main_camera, pos_img_sky.x + img_sky.getwidth(), pos_img_sky.y, &img_sky_mirror);*/
 		/*左中右顺序*/
 
-		const int N = main_camera.get_position().x / img_sky1.getwidth() > 0? main_camera.get_position().x / img_sky1.getwidth(): main_camera.get_position().x / img_sky1.getwidth() -1;
+		const int N = main_camera.get_position().x / img_sky1.getwidth() > 0
+			? main_camera.get_position().x / img_sky1.getwidth()
+			: main_camera.get_position().x / img_sky1.getwidth() - 1;
 		int X = main_camera.get_position().x + N * img_sky1.getwidth();
 		/*卷轴效果*/
 		/*
+		N = camera.x / window_width 区分在第N+1个窗口处
+		X = camera.x + N * window_width
 		if( N > 0)
 				N* img_sky1.getwidth() < X < (N+1)* img_sky1.getwidth()
 		else if(N <=0 )
