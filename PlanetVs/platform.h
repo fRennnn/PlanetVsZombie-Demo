@@ -21,7 +21,8 @@ public:
 	{
 		float y; 
 		float left, right;
-	};
+		float up, down;
+	}; 
 
 public:
 	CollisionShape shape;

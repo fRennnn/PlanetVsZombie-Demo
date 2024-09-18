@@ -373,13 +373,10 @@ public:
 
 		if (hp <= 0)
 			return;
-		/*2024 9/9留
-			我说怎么一按跳跃键就无敌，原来velocity.y > 0本来就是false^^ 下面代码也不用走了
-			*/
-		//std::cout << "P" <<(int)id+1<<" 's Velocity.y = " << velocity.y << "\n";
-		/*if (velocity.y <= 0) {
-			std::cout << "Error!!!!!!!!!!!!!!!"<<"P" <<(int)id+1<<" 'sVelocity.y = { "<< velocity.y<<" }\n";
-		}*/
+		/*
+			2024 9/9留
+			我说怎么一按跳跃键就无敌，原来velocit y.y > 0本来就是false^^ 下面代码也不用走了
+		*/
 		if (velocity.y > 0)
 		{
 			for (const Platform& platform : platform_list)//平台碰撞逻辑 从下到上可以穿过?
@@ -406,7 +403,7 @@ public:
 				}
 			}
 		}
-		/*这个别放上面,不然就是"为什么我跳跃有无敌效果啊^^?"了*/
+		/*这个别放if (velocity.y > 0)里面,不然就是"为什么我跳跃有无敌效果啊^^?"了*/
 		check_bullet_collide();
 	}
 

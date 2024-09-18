@@ -116,7 +116,7 @@ public:
 		small_platform_3.shape.left = (float)small_platform_3.render_position.x + 40;
 		small_platform_3.shape.right = (float)small_platform_3.render_position.x + img_platform_small.getwidth() - 40;
 		small_platform_3.shape.y = (float)small_platform_3.render_position.y + img_platform_small.getheight() / 2;
-
+ 
 		Platform& small_platform_4 = platform_list[4];
 		small_platform_4.img = &img_platform_small;
 		small_platform_4.render_position.x = 1255;
@@ -212,13 +212,26 @@ public:
 		putimage_alpha(main_camera, pos_img_sky.x + img_sky.getwidth(), pos_img_sky.y, &img_sky_mirror);*/
 		/*×óÖÐÓÒË³Ðò*/
 
-		putimage_alpha(main_camera, pos_img_sky.x, pos_img_sky.y, &img_sky1);
+		const int N = main_camera.get_position().x / img_sky1.getwidth() > 0? main_camera.get_position().x / img_sky1.getwidth(): main_camera.get_position().x / img_sky1.getwidth() -1;
+		int X = main_camera.get_position().x + N * img_sky1.getwidth();
+		/*¾íÖáÐ§¹û*/
+		/*
+		if( N > 0)
+				N* img_sky1.getwidth() < X < (N+1)* img_sky1.getwidth()
+		else if(N <=0 )
+				(N-1)* img_sky1.getwidth() < X < N* img_sky1.getwidth()
+		*/
+		putimage_alpha(main_camera, pos_img_sky.x + (N) * img_sky1.getwidth(), pos_img_sky.y, &img_sky1);
+		putimage_alpha(main_camera, pos_img_sky.x + (N + 1) * img_sky1.getwidth(), pos_img_sky.y, &img_sky1);
+		
+		
 		putimage_alpha(main_camera, pos_img_sky.x, pos_img_sky.y, &img_sky2);
 		putimage_alpha(main_camera, pos_img_sky.x, pos_img_sky.y, &img_sky3);
 		putimage_alpha(main_camera, pos_img_sky.x, pos_img_sky.y, &img_sky4);
 		
 		/*putimage_alpha(main_camera,pos_img_hills.x, pos_img_hills.y, &img_hills);
 		putimage_alpha(main_camera, pos_img_hills.x + img_hills.getwidth(), pos_img_hills.y, &img_hills_mirror);
+
 		putimage_alpha(main_camera, pos_img_hills.x - img_hills.getwidth(), pos_img_hills.y, &img_hills_mirror);*/
 
 		putimage_alpha(main_camera, pos_img_platform.x, pos_img_platform.y, &img_platform_large);//1036 width
