@@ -423,7 +423,6 @@ public:
 							position.x = leftOrRight ? it.left - size.x : it.right;
 						}
 					}else if(is_collide_x && is_under_wall){
-						std::cout << "Under\n";
 						if (is_hit_wall) {
 							position.y = it.height;
 							velocity.y = 0;
