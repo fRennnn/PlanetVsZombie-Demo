@@ -185,7 +185,6 @@ public:
 		if (is_showing_sketch_frame)
 			sketch_image(current_animation->get_frame(), &img_sketch);
 
-
 		move_and_collide(delta);
 	}
 
@@ -223,6 +222,9 @@ public:
 			const Vector2& pos_camera = camera.get_position();
 			rectangle((int)(position.x - pos_camera.x), (int)(position.y - pos_camera.y),
 				(int)(position.x + size.x - pos_camera.x), (int)(position.y + size.y - pos_camera.y));
+			//circle((int)(position.x - pos_camera.x), (int)(position.y - pos_camera.y), 1);
+			line((int)(position.x - pos_camera.x), (int)position.y + size.y - 10, (int)(position.x + size.x - pos_camera.x), (int)position.y + size.y - 10);
+			line((int)(position.x - pos_camera.x), (int)position.y +  10, (int)(position.x + size.x - pos_camera.x), (int)position.y + 10);
 		}
 	}
 
@@ -377,16 +379,17 @@ public:
 			2024 9/9留
 			我说怎么一按跳跃键就无敌，原来velocit y.y > 0本来就是false^^ 下面代码也不用走了
 		*/
-		if (velocity.y > 0)
+		
+		for (const Platform& platform : platform_list)//平台碰撞逻辑 从下到上可以穿过?
 		{
-			for (const Platform& platform : platform_list)//平台碰撞逻辑 从下到上可以穿过?
+			
+			if (velocity.y > 0) //WHen you fall
 			{
 				const Platform::CollisionShape& shape = platform.shape;
 				bool is_collide_x = (max(position.x + size.x, shape.right) - min(position.x, shape.left))
 					<= size.x + (shape.right - shape.left);
 				bool is_collide_y = (shape.y >= position.y && shape.y <= position.y + size.y);
-
-				if (is_collide_x && is_collide_y)
+				if (is_collide_x && is_collide_y) 
 				{
 					float delta_pos_y = velocity.y * delta;
 					float last_tick_foot_pos_y = position.y + size.y - delta_pos_y;
@@ -398,11 +401,38 @@ public:
 						if (last_velocity_y != 0){
 							on_land();
 						}
-						break;
+					}
+				}
+			}
+			if (platform.is_wall) {
+				for (const auto& it : platform.wall_lists) {
+					float delta_pos_y = velocity.y * delta;
+					float last_tick_foot_pos_y = position.y + 10 - delta_pos_y;
+					bool is_collide_x = (max(position.x + size.x, it.right) - min(position.x, it.left))
+						<= size.x + std::abs(it.right - it.left);
+					bool is_under_wall = last_tick_foot_pos_y > it.height;
+					bool is_hit_wall = position.y + 10 < it.height && last_tick_foot_pos_y > it.height;
+					//not under the wall
+					if (is_collide_x && !is_under_wall && !is_hit_wall) {
+						const Platform::CollisionShape& shape = platform.shape;
+						bool is_collide_yL_DOWN = (position.y + size.y - 10 > shape.y) && (position.y + size.y - 10 < it.height);
+						bool is_collide_yL_UP = (position.y + 10 > shape.y) && (position.y + 10 < it.height);
+
+						if ((is_collide_yL_DOWN || is_collide_yL_UP) && is_collide_x) {
+							bool leftOrRight = (position.x + size.x >= it.left && position.x <= it.left) ? true : false;
+							position.x = leftOrRight ? it.left - size.x : it.right;
+						}
+					}else if(is_collide_x && is_under_wall){
+						std::cout << "Under\n";
+						if (is_hit_wall) {
+							position.y = it.height;
+							velocity.y = 0;
+						}
 					}
 				}
 			}
 		}
+		
 		/*这个别放if (velocity.y > 0)里面,不然就是"为什么我跳跃有无敌效果啊^^?"了*/
 		check_bullet_collide();
 	}
@@ -413,11 +443,6 @@ public:
 				//std::cout << "---------------------------------------\n";
 				for (Bullet* bullet : bullet_list) {
 					if (!bullet->get_valid() || bullet->get_collide_target() != id) {
-						//std::cout << "=======================\n";
-						//std::cout << "First is "<< !bullet->get_valid()<<" \n";//?
-						//std::cout << "Get_collide_target is " << (int)bullet->get_collide_target() + 1 << " \n";
-						//std::cout << "Now id is " << (int)id + 1 << " \n";
-						//std::cout << "=======================\n";
 						continue;
 					}
 

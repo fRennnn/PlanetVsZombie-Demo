@@ -69,12 +69,12 @@ public:
 
 	virtual bool check_collision(const Vector2& position, const Vector2& size) {
 		//std::cout << "\nIn check_collision()\|\|\|\|/" << '\n';
-		if (this->position.x + this->size.x / 2 >= position.x
-			&& this->position.x + this->size.x / 2 <= position.x + size.x
-			&& this->position.y + this->size.y / 2 >= position.y
-			&& this->position.y + this->size.y / 2 <= position.y + size.y) {
-			//std::cout<<"This work...\n";
-		}
+		//if (this->position.x + this->size.x / 2 >= position.x
+		//	&& this->position.x + this->size.x / 2 <= position.x + size.x
+		//	&& this->position.y + this->size.y / 2 >= position.y
+		//	&& this->position.y + this->size.y / 2 <= position.y + size.y) {
+		//	//std::cout<<"This work...\n";
+		//}
 		return this->position.x + this->size.x / 2 >= position.x
 			&& this->position.x + this->size.x / 2 <= position.x + size.x
 			&& this->position.y + this->size.y / 2 >= position.y

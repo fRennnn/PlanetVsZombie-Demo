@@ -13,7 +13,6 @@ public:
 		timer_shake.set_callback([&]()
 			{
 				is_shaking = false;
-				reset();
 			});
 		timer_map_rolling.set_one_shot(true);
 		timer_map_rolling.set_wait_time(100);
@@ -30,6 +29,7 @@ public:
 	}
 
 	void reset() {
+		//std::cout << "Hello?\n";
 		position = { 0,0 };
 		//do_nothing
 	}
@@ -44,8 +44,8 @@ public:
 		//position += {0, 0.35f};
 		
 		if (is_shaking) { 
-			position.x = (-50 + rand() % 100) / 50.0f * shaking_strength; //[-1.0 , 1.0] <-- 抖动强度
-			position.y = (-50 + rand() % 100) / 50.0f * shaking_strength;
+			position.x += (-50 + rand() % 100) / 50.0f * shaking_strength; //[-1.0 , 1.0] <-- 抖动强度
+			position.y += (-50 + rand() % 100) / 50.0f * shaking_strength;
 		}
 		if (map_roll) {
 			timer_map_rolling.on_update(delta);
@@ -94,8 +94,6 @@ public:
 	}
 
 	bool can_moveforward(const Vector2& left, const Vector2& right) {
-		/*std::cout << "left.x = " << left.x << " cam + cam_wid = " << position.x + camera_width << '\n';
-		std::cout << "right.x = " << right.x << " cam + cam_wid = " << position.x + camera_width << '\n';*/
 		return left.x >= position.x + camera_width || right.x >= position.x + camera_width;
 	}
 
@@ -120,3 +118,4 @@ private:
 	Direction now_direction;
 	const int camera_width = 1250;
 };
+

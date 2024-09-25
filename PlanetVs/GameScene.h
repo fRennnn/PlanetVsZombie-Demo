@@ -100,6 +100,7 @@ public:
 		small_platform_1.shape.left = (float)small_platform_1.render_position.x + 40;
 		small_platform_1.shape.right = (float)small_platform_1.render_position.x + img_platform_small.getwidth() - 40;
 		small_platform_1.shape.y = (float)small_platform_1.render_position.y + img_platform_small.getheight() / 2;
+		
 
 		Platform& small_platform_2 = platform_list[2];
 		small_platform_2.img = &img_platform_small;
@@ -108,6 +109,7 @@ public:
 		small_platform_2.shape.left = (float)small_platform_2.render_position.x + 40;
 		small_platform_2.shape.right = (float)small_platform_2.render_position.x + img_platform_small.getwidth() - 40;
 		small_platform_2.shape.y = (float)small_platform_2.render_position.y + img_platform_small.getheight() / 2;
+		
 
 		Platform& small_platform_3 = platform_list[3];
 		small_platform_3.img = &img_platform_small;
@@ -116,6 +118,9 @@ public:
 		small_platform_3.shape.left = (float)small_platform_3.render_position.x + 40;
 		small_platform_3.shape.right = (float)small_platform_3.render_position.x + img_platform_small.getwidth() - 40;
 		small_platform_3.shape.y = (float)small_platform_3.render_position.y + img_platform_small.getheight() / 2;
+		small_platform_3.wall_lists.emplace_back((float)small_platform_3.shape.y + 150, small_platform_3.shape.left, small_platform_3.shape.left+20);
+		small_platform_3.wall_lists.emplace_back((float)small_platform_3.shape.y + 150, small_platform_3.shape.right-20, small_platform_3.shape.right);
+		small_platform_3.is_wall = true;
  
 		Platform& small_platform_4 = platform_list[4];
 		small_platform_4.img = &img_platform_small;
@@ -222,7 +227,7 @@ public:
 		X = camera.x + N * window_width
 		if( N > 0)
 				N* img_sky1.getwidth() < X < (N+1)* img_sky1.getwidth()
-		else if(N <=0 )
+		else if(N <=0 ) 
 				(N-1)* img_sky1.getwidth() < X < N* img_sky1.getwidth()
 		*/
 		putimage_alpha(main_camera, pos_img_sky.x + (N) * img_sky1.getwidth(), pos_img_sky.y, &img_sky1);
