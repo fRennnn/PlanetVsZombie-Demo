@@ -92,6 +92,8 @@ public:
 		large_platform.shape.left = (float)large_platform.render_position.x + 30;
 		large_platform.shape.right = (float)large_platform.render_position.x + img_platform_large.getwidth() - 30;
 		large_platform.shape.y = (float)large_platform.render_position.y + 60;
+		large_platform.wall_lists.emplace_back((float)large_platform.shape.y + 250, large_platform.shape.left, large_platform.shape.right);
+		large_platform.is_wall = true;
 
 		Platform& small_platform_1 = platform_list[1];
 		small_platform_1.img = &img_platform_small;
@@ -118,8 +120,7 @@ public:
 		small_platform_3.shape.left = (float)small_platform_3.render_position.x + 40;
 		small_platform_3.shape.right = (float)small_platform_3.render_position.x + img_platform_small.getwidth() - 40;
 		small_platform_3.shape.y = (float)small_platform_3.render_position.y + img_platform_small.getheight() / 2;
-		small_platform_3.wall_lists.emplace_back((float)small_platform_3.shape.y + 150, small_platform_3.shape.left, small_platform_3.shape.left+20);
-		small_platform_3.wall_lists.emplace_back((float)small_platform_3.shape.y + 150, small_platform_3.shape.right-20, small_platform_3.shape.right);
+		small_platform_3.wall_lists.emplace_back((float)small_platform_3.shape.y + 150, small_platform_3.shape.left, small_platform_3.shape.right);
 		small_platform_3.is_wall = true;
  
 		Platform& small_platform_4 = platform_list[4];

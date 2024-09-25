@@ -407,11 +407,11 @@ public:
 			if (platform.is_wall) {
 				for (const auto& it : platform.wall_lists) {
 					float delta_pos_y = velocity.y * delta;
-					float last_tick_foot_pos_y = position.y + 10 - delta_pos_y;
+					float last_frame_pos_y = position.y + 10 - delta_pos_y;
 					bool is_collide_x = (max(position.x + size.x, it.right) - min(position.x, it.left))
 						<= size.x + std::abs(it.right - it.left);
-					bool is_under_wall = last_tick_foot_pos_y > it.height;
-					bool is_hit_wall = position.y + 10 < it.height && last_tick_foot_pos_y > it.height;
+					bool is_under_wall = last_frame_pos_y > it.height;
+					bool is_hit_wall = position.y + 10 < it.height && last_frame_pos_y > it.height; //当前帧 < height && 上一帧 > height
 					//not under the wall
 					if (is_collide_x && !is_under_wall && !is_hit_wall) {
 						const Platform::CollisionShape& shape = platform.shape;
