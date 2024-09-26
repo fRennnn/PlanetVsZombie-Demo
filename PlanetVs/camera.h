@@ -117,5 +117,8 @@ private:
 	float direction = 1.0f;
 	Direction now_direction;
 	const int camera_width = 1250;
+
+	int temp_x;
+	int temp_y;
 };
 

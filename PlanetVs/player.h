@@ -222,9 +222,8 @@ public:
 			const Vector2& pos_camera = camera.get_position();
 			rectangle((int)(position.x - pos_camera.x), (int)(position.y - pos_camera.y),
 				(int)(position.x + size.x - pos_camera.x), (int)(position.y + size.y - pos_camera.y));
-			//circle((int)(position.x - pos_camera.x), (int)(position.y - pos_camera.y), 1);
-			line((int)(position.x - pos_camera.x), (int)position.y + size.y - 10, (int)(position.x + size.x - pos_camera.x), (int)position.y + size.y - 10);
-			line((int)(position.x - pos_camera.x), (int)position.y +  10, (int)(position.x + size.x - pos_camera.x), (int)position.y + 10);
+			line((int)(position.x - pos_camera.x), (int)position.y + size.y - 10 - pos_camera.y, (int)(position.x + size.x - pos_camera.x), (int)position.y + size.y - 10 - pos_camera.y);
+			line((int)(position.x - pos_camera.x), (int)position.y +  10 - pos_camera.y, (int)(position.x + size.x - pos_camera.x), (int)position.y + 10 - pos_camera.y);
 		}
 	}
 
@@ -423,6 +422,7 @@ public:
 							position.x = leftOrRight ? it.left - size.x : it.right;
 						}
 					}else if(is_collide_x && is_under_wall){
+						//if you Jump and hit the ceiling
 						if (is_hit_wall) {
 							position.y = it.height;
 							velocity.y = 0;
