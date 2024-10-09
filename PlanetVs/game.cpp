@@ -10,7 +10,7 @@
 #include"player.h"
 #include"Bullet.h"
 #include<chrono>
-//nihao
+
 #pragma comment(lib,"Winmm.lib")
 SceneManager scene_manager;
 IMAGE img_menu_bg;
