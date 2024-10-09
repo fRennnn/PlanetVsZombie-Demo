@@ -13,7 +13,7 @@
 
 #pragma comment(lib,"Winmm.lib")
 SceneManager scene_manager;
-IMAGE img_menu_bg;
+IMAGE img_menu_bg; 
 
 IMAGE img_vs;
 IMAGE img_1P;
