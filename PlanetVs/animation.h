@@ -4,8 +4,6 @@
 #include<functional>
 #include<graphics.h>
 #include"camera.h"
-#include<vector>
-#include"vector2.h"
 class Animation
 {
 public:
@@ -85,15 +83,4 @@ private:
 	int idx_frame = 0;		//Ö¡Ë÷Òý
 	bool is_loop = true; //ÊÇ·ñÑ­»·
 	std::function<void()> callback;
-
-private:
-	struct Frame {
-		Rect rect_src;
-		IMAGE* img = nullptr;
-		Frame() = default;
-		Frame(IMAGE* img_,const Rect& rect_src_):img(img_),rect_src(rect_src_){}
-
-		~Frame() = default;
-	};
 };
-

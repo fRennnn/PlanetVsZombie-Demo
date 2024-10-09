@@ -9,7 +9,6 @@ class CollisionWall {
 public:
 	/*
 	abs(right - left) >= 20!!!
-	不然会有Bug;
 	*/
 	CollisionWall(float _height, float _left, float _right) :height(_height), left(_left), right(_right) {
 		

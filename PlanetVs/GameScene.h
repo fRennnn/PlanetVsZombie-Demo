@@ -15,7 +15,6 @@ extern IMAGE img_sky1;
 extern IMAGE img_sky2;
 extern IMAGE img_sky3;
 extern IMAGE img_sky4;
-extern IMAGE mossy;
 
 extern IMAGE img_hills;
 extern IMAGE img_hills_mirror;
@@ -132,14 +131,6 @@ public:
 		small_platform_4.shape.right = (float)small_platform_4.render_position.x + img_platform_small.getwidth() - 40;
 		small_platform_4.shape.y = (float)small_platform_4.render_position.y + img_platform_small.getheight() / 2;
 
-		/*Platform& test_pfm = platform_list[5];
-		test_pfm.img = &mossy;
-		test_pfm.render_position.x = 0;
-		test_pfm.render_position.y = 360;
-		test_pfm.shape.left = (float)test_pfm.render_position.x + 40;
-		test_pfm.shape.right = (float)test_pfm.render_position.x + mossy.getwidth() / 2;
-		test_pfm.shape.y = (float)test_pfm.render_position.y + mossy.getheight() / 2;*/
-		
 		mciSendString(_T("play ddtGame repeat from 0"), NULL, 0, NULL);
 	}
 	void on_update(int delta)
@@ -221,6 +212,12 @@ public:
 	}
 	void on_draw(const Camera& main_camera)
 	{
+		//±³¾°
+		/*putimage_alpha(main_camera, pos_img_sky.x - img_sky.getwidth(), pos_img_sky.y, &img_sky_mirror);
+		putimage_alpha(main_camera, pos_img_sky.x, pos_img_sky.y, &img_sky);
+		putimage_alpha(main_camera, pos_img_sky.x + img_sky.getwidth(), pos_img_sky.y, &img_sky_mirror);*/
+		/*×óÖÐÓÒË³Ðò*/
+
 		const int N = main_camera.get_position().x / img_sky1.getwidth() > 0
 			? main_camera.get_position().x / img_sky1.getwidth()
 			: main_camera.get_position().x / img_sky1.getwidth() - 1;
@@ -248,17 +245,7 @@ public:
 		putimage_alpha(main_camera, pos_img_hills.x - img_hills.getwidth(), pos_img_hills.y, &img_hills_mirror);*/
 
 		putimage_alpha(main_camera, pos_img_platform.x, pos_img_platform.y, &img_platform_large);//1036 width
-		
-		Rect test_rect;
-		test_rect.x = 47;
-		test_rect.y = 58;
-		test_rect.w = 33;
-		test_rect.h = 22;
-		Rect test{
-			100,100,
-			test_rect.w << 2,test_rect.h << 2
-		};
-		putimage_ex(&mossy, &test, &test_rect);
+		//putimage_alpha(125, 550, &img_platform_large);
 		settextcolor(RGB(255, 0, 0));
 		for (const Platform& platform : platform_list)
 			platform.on_draw(main_camera);
@@ -273,7 +260,6 @@ public:
 		for (const Bullet* bullet : bullet_list) {
 			bullet->on_draw(main_camera);
 		}
-
 		if (is_gameover) {
 			putimage_alpha(pos_img_winner_bar.x, pos_img_winner_bar.y, &img_winner_bar);
 			putimage_alpha(pos_img_winner_text.x, pos_img_winner_text.y,
