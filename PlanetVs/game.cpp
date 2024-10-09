@@ -51,6 +51,8 @@ IMAGE img_sky2;
 IMAGE img_sky3;
 IMAGE img_sky4;
 
+IMAGE mossy;
+IMAGE mossy_platform1;
 Atlas altas_peashooter_idle_left;
 Atlas altas_peashooter_idle_right;
 Atlas altas_peashooter_run_left;
@@ -116,7 +118,7 @@ void flip_altas(Atlas& src, Atlas& dst)
 void load_game_res()
 {
 	AddFontResourceEx(_T("resources/IPix.ttf"), FR_PRIVATE, NULL); //ÏñËØ×ÖÌå 
-
+	loadimage(&mossy, _T("resources/stringstar fields/tileset.png"));
 	loadimage(&img_menu_bg, _T("resources/menu_background.png"));
 	loadimage(&img_1P, _T("resources/1P.png"));
 	loadimage(&img_2P, _T("resources/2P.png"));
