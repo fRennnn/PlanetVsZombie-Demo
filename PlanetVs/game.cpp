@@ -106,6 +106,8 @@ IMAGE* img_player_2_avatar = nullptr;
 
 IMAGE BIGPicture;							//≤‚ ‘”√
 IMAGE Pixiv_platform;
+
+
 void flip_altas(Atlas& src, Atlas& dst)
 {
 	dst.clear();
@@ -142,6 +144,7 @@ void load_game_res()
 	flip_image(&img_peashooter_selector_bg_right, &img_peashooter_selector_bg_left);
 	loadimage(&img_sunflower_selector_bg_right, _T("resources/sunflower_selector_background.png"));
 	flip_image(&img_sunflower_selector_bg_right, &img_sunflower_selector_bg_left);
+	//≤‚ ‘”√
 	loadimage(&BIGPicture, _T("resources/stringstar fields/tileset.png"));
 
 	//±≥æ∞Àÿ≤ƒ

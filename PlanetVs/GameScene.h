@@ -33,8 +33,31 @@ extern Camera main_camera;				//ÉãÏñ»ú
 
 extern std::vector<Platform> platform_list;
 extern std::vector<Bullet*> bullet_list;
+
 extern Player* player_1;
 extern Player* player_2;
+/*ÊÊÅäÍ¼¼¯ËØ²Ä*/
+class ExtensionAssert {
+public:
+	// x1 ... -> src x2 ... -> dst
+	ExtensionAssert(int x1, int y1, int w1, int h1,
+		int x2, int y2, int w2, int h2) {
+		src.x = x1;
+		src.y = y1;
+		src.w = w1;
+		src.h = h1;
+		dst.x = x2;
+		dst.y = y2;
+		dst.w = w2;
+		dst.h = h2;
+	}
+	~ExtensionAssert() = default;
+public:
+	Rect src;
+	Rect dst;
+};
+
+std::vector<ExtensionAssert> BIGPicture_extensionAssert_list;
 class GameScene : public Scene
 {
 public:
@@ -142,7 +165,8 @@ public:
 		small_platform_5.shape.left = (float)small_platform_5.render_position.x + 40;
 		small_platform_5.shape.right = (float)small_platform_5.render_position.x + img_platform_small.getwidth() - 40;
 		small_platform_5.shape.y = (float)small_platform_5.render_position.y + img_platform_small.getheight() / 2;
-		
+		BIGPicture_extensionAssert_list.emplace_back(79, 62, 84, 18,
+			30, 235, (84 << 1) + 10, 18 << 1);
 		mciSendString(_T("play ddtGame repeat from 0"), NULL, 0, NULL);
 	}
 	void on_update(int delta)
@@ -222,11 +246,6 @@ public:
 			}
 		}
 	}
-	int x1 = 30, y1 = 235, w1 = (84 << 1)+10, h1 = 18 << 1;
-	Rect tmp_dst{ x1,y1,w1,h1 };
-
-	int x2 = 79, y2 = 62, w2 = 84, h2 = 18;
-	Rect tmp_src{ x2,y2,w2,h2 };
 	void on_draw(const Camera& main_camera)
 	{ 
 		const int N = main_camera.get_position().x / img_sky1.getwidth() > 0
@@ -257,7 +276,8 @@ public:
 
 		putimage_alpha(main_camera, pos_img_platform.x, pos_img_platform.y, &img_platform_large);//1036 width
 
-		putimage_ex(main_camera ,&BIGPicture, &tmp_dst, &tmp_src);
+		for (const auto& it : BIGPicture_extensionAssert_list)
+			putimage_ex(main_camera, &BIGPicture, &it.dst, &it.src);
 
 		settextcolor(RGB(255, 0, 0));
 		for (const Platform& platform : platform_list)
