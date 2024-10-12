@@ -417,6 +417,7 @@ public:
 						bool is_collide_yL_DOWN = (position.y + size.y - 10 > shape.y) && (position.y + size.y - 10 < it.height);
 						bool is_collide_yL_UP = (position.y + 10 > shape.y) && (position.y + 10 < it.height);
 
+						//you hit the WALL
 						if ((is_collide_yL_DOWN || is_collide_yL_UP) && is_collide_x) {
 							bool leftOrRight = (position.x + size.x >= it.left && position.x <= it.left) ? true : false;
 							position.x = leftOrRight ? it.left - size.x : it.right;

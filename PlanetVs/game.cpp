@@ -94,6 +94,7 @@ Scene* selector_scene = nullptr;
 
 Camera main_camera;
 
+
 std::vector<Platform> platform_list;
 std::vector<Bullet*> bullet_list;
 Player* player_1 = nullptr;
@@ -102,6 +103,9 @@ bool is_debug = false;
 
 IMAGE* img_player_1_avatar = nullptr;		//Õ∑œÒ
 IMAGE* img_player_2_avatar = nullptr;
+
+IMAGE BIGPicture;							//≤‚ ‘”√
+IMAGE Pixiv_platform;
 void flip_altas(Atlas& src, Atlas& dst)
 {
 	dst.clear();
@@ -138,6 +142,7 @@ void load_game_res()
 	flip_image(&img_peashooter_selector_bg_right, &img_peashooter_selector_bg_left);
 	loadimage(&img_sunflower_selector_bg_right, _T("resources/sunflower_selector_background.png"));
 	flip_image(&img_sunflower_selector_bg_right, &img_sunflower_selector_bg_left);
+	loadimage(&BIGPicture, _T("resources/stringstar fields/tileset.png"));
 
 	//±≥æ∞Àÿ≤ƒ
 	loadimage(&img_vs, _T("resources/VS.png"));

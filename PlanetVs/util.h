@@ -1,6 +1,10 @@
 #pragma once
 #include<graphics.h>
 #include"camera.h"
+struct Rect {
+	int x, y;
+	int w, h;
+};
 #pragma comment(lib,"MSIMG32.LIB")
 inline void flip_image(IMAGE* src, IMAGE* dst)
 {
@@ -49,6 +53,17 @@ inline void putimage_alpha(const Camera& camera, int dst_x, int dst_y, IMAGE* im
 	AlphaBlend(GetImageHDC(GetWorkingImage()), (int)(dst_x - pos_camera.x), (int)(dst_y - pos_camera.y), 
 		w, h,GetImageHDC(img), 0, 0, w, h, { AC_SRC_OVER,0,255,AC_SRC_ALPHA });
 }
+
+inline void putimage_ex(const Camera& camera , IMAGE* img, const Rect* rect_dst, const Rect* rect_src = nullptr) {
+	static BLENDFUNCTION blend_func = { AC_SRC_OVER,0,255,AC_SRC_ALPHA };
+
+	const Vector2& pos_camera = camera.get_position();
+
+	AlphaBlend(GetImageHDC(GetWorkingImage()), rect_dst->x - pos_camera.x, rect_dst->y - pos_camera.y, rect_dst->w, rect_dst->h,
+		GetImageHDC(img), rect_src ? rect_src->x : 0, rect_src ? rect_src->y : 0,
+		rect_src ? rect_src->w : img->getwidth(), rect_src ? rect_src->h : img->getheight(), blend_func);
+}
+
 
 inline void line(const Camera& camera, int x1, int y1, int x2, int y2) {
 	const Vector2& pos_camera = camera.get_position();

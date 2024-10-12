@@ -20,6 +20,8 @@ extern IMAGE img_hills;
 extern IMAGE img_hills_mirror;
 extern IMAGE img_platform_large;
 extern IMAGE img_platform_small;
+extern IMAGE Pixiv_platform;
+extern IMAGE BIGPicture;
 extern IMAGE* img_player_1_avatar;		//头像
 extern IMAGE* img_player_2_avatar;
 
@@ -83,7 +85,7 @@ public:
 		pos_img_hills.y = (getheight() - img_hills.getheight()) / 2;
 
 		/*平台数据初始化*/
-		platform_list.resize(5);	
+		platform_list.resize(6);	
 
 		Platform& large_platform = platform_list[0];
 		large_platform.img = &img_platform_large;
@@ -131,6 +133,16 @@ public:
 		small_platform_4.shape.right = (float)small_platform_4.render_position.x + img_platform_small.getwidth() - 40;
 		small_platform_4.shape.y = (float)small_platform_4.render_position.y + img_platform_small.getheight() / 2;
 
+		Platform& small_platform_5 = platform_list[5];
+		small_platform_5.img = &Pixiv_platform;
+		
+		//  x = 79, y = 62, w = 84, h = 18; 
+		small_platform_5.render_position.x = -10;
+		small_platform_5.render_position.y = 225;
+		small_platform_5.shape.left = (float)small_platform_5.render_position.x + 40;
+		small_platform_5.shape.right = (float)small_platform_5.render_position.x + img_platform_small.getwidth() - 40;
+		small_platform_5.shape.y = (float)small_platform_5.render_position.y + img_platform_small.getheight() / 2;
+		
 		mciSendString(_T("play ddtGame repeat from 0"), NULL, 0, NULL);
 	}
 	void on_update(int delta)
@@ -210,14 +222,13 @@ public:
 			}
 		}
 	}
-	void on_draw(const Camera& main_camera)
-	{
-		//背景
-		/*putimage_alpha(main_camera, pos_img_sky.x - img_sky.getwidth(), pos_img_sky.y, &img_sky_mirror);
-		putimage_alpha(main_camera, pos_img_sky.x, pos_img_sky.y, &img_sky);
-		putimage_alpha(main_camera, pos_img_sky.x + img_sky.getwidth(), pos_img_sky.y, &img_sky_mirror);*/
-		/*左中右顺序*/
+	int x1 = 30, y1 = 235, w1 = (84 << 1)+10, h1 = 18 << 1;
+	Rect tmp_dst{ x1,y1,w1,h1 };
 
+	int x2 = 79, y2 = 62, w2 = 84, h2 = 18;
+	Rect tmp_src{ x2,y2,w2,h2 };
+	void on_draw(const Camera& main_camera)
+	{ 
 		const int N = main_camera.get_position().x / img_sky1.getwidth() > 0
 			? main_camera.get_position().x / img_sky1.getwidth()
 			: main_camera.get_position().x / img_sky1.getwidth() - 1;
@@ -245,7 +256,9 @@ public:
 		putimage_alpha(main_camera, pos_img_hills.x - img_hills.getwidth(), pos_img_hills.y, &img_hills_mirror);*/
 
 		putimage_alpha(main_camera, pos_img_platform.x, pos_img_platform.y, &img_platform_large);//1036 width
-		//putimage_alpha(125, 550, &img_platform_large);
+
+		putimage_ex(main_camera ,&BIGPicture, &tmp_dst, &tmp_src);
+
 		settextcolor(RGB(255, 0, 0));
 		for (const Platform& platform : platform_list)
 			platform.on_draw(main_camera);
